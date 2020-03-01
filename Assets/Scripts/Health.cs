@@ -19,17 +19,13 @@ public class Health : MonoBehaviour
     {
         if (block < damage)
         {
+            int leftoverDamage = damage - block;
             block = 0;
-            damage -= block;
-            currentHealth -= damage;
-        }
-        else if (block >= damage)
-        {
-            block -= damage;
+            currentHealth -= leftoverDamage;
         }
         else
         {
-            currentHealth -= damage;
+            block -= damage;
         }
         healthText.text = "" + (currentHealth + block) + " / " + maxHealth;
         if (currentHealth <= 0)
