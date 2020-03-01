@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
@@ -16,7 +15,7 @@ public class Draggable : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (Player.instance.GetCurrentEnergy() > 0)
+        if (Player.instance.GetCurrentEnergy() > 0 && this.GetComponent<Card>().level <= Player.instance.GetCurrentEnergy())
         {
             screenPoint = mainCamera.WorldToScreenPoint(transform.position);
             offset = new Vector3(0, 0, 0);
@@ -26,10 +25,10 @@ public class Draggable : MonoBehaviour
 
     private void OnMouseDrag()
     {
-        if (Player.instance.GetCurrentEnergy() > 0)
+        if (Player.instance.GetCurrentEnergy() > 0 && this.GetComponent<Card>().level <= Player.instance.GetCurrentEnergy())
         {
             this.GetComponent<BoxCollider2D>().enabled = false;
-            if (this.GetComponent<AttackCard>())
+            if (this.GetComponent<Card>().hasTarget)
             {
                 this.transform.position = Vector3.MoveTowards(this.transform.position, new Vector3(0.0f, this.transform.position.y, this.transform.position.z), 1.0f);
                 this.transform.rotation = new Quaternion(0.0f, 0.0f, 0.0f, 0.0f);
@@ -52,10 +51,10 @@ public class Draggable : MonoBehaviour
 
     private void OnMouseUp()
     {
-        if (Player.instance.GetCurrentEnergy() > 0)
+        if (Player.instance.GetCurrentEnergy() > 0 && this.GetComponent<Card>().level <= Player.instance.GetCurrentEnergy())
         {
             this.GetComponent<BoxCollider2D>().enabled = true;
-            if (this.GetComponent<AttackCard>())
+            if (this.GetComponent<Card>().hasTarget)
             {
                 var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit2D hit = Physics2D.Raycast(ray.origin, Vector2.zero);
@@ -63,10 +62,11 @@ public class Draggable : MonoBehaviour
                 {
                     if (hit.collider.gameObject.GetComponent<Enemy>())
                     {
-                        int damage = this.gameObject.GetComponent<AttackCard>().damage;
-                        hit.collider.GetComponent<Health>().TakeDamage(damage);
+                        CardEffectManager effects = this.GetComponent<CardEffectManager>();
+                        effects.SetTargets(hit.collider.gameObject);
+                        effects.AddToStack();
+                        CardEffectStack.instance.ResolveCardEffect();
                         Hand.instance.RemoveToDiscard(this.gameObject.GetComponent<Card>());
-                        //Destroy(this.gameObject);
                         this.gameObject.SetActive(false);
                     }
                 }

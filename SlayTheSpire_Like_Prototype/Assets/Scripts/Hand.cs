@@ -29,12 +29,12 @@ public class Hand : MonoBehaviour
     public void RemoveCard(Card card)
     {
         this.GetComponent<LayoutManager>().RemoveCard(card);
-        Player.instance.SpendEnergy(1);
+        Player.instance.SpendEnergy(card.gameObject.GetComponent<Card>().level);
     }
 
     public void RemoveToDiscard(Card card)
     {
         this.GetComponent<LayoutManager>().RemoveToDiscard(card);
-        Player.instance.SpendEnergy(1);
+        Player.instance.SpendEnergy(card.gameObject.GetComponent<Card>().level);
     }
 }

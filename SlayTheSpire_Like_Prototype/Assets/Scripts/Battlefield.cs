@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Battlefield : MonoBehaviour
 {
@@ -8,13 +6,13 @@ public class Battlefield : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //Debug.Log(collision.name + " collides with " + this.name);
-        if (collision.gameObject.GetComponent<DefenseCard>())
+        if (!collision.gameObject.GetComponent<Card>().hasTarget)
         {
-            int block = collision.gameObject.GetComponent<DefenseCard>().health;
-            player.GetComponent<Health>().AddBlock(block);
+            CardEffectManager effects = collision.gameObject.GetComponent<CardEffectManager>();
+            effects.SetTargets(player);
+            effects.AddToStack();
+            CardEffectStack.instance.ResolveCardEffect();
             Hand.instance.RemoveToDiscard(collision.gameObject.GetComponent<Card>());
-            //Destroy(collision.gameObject);
             collision.gameObject.SetActive(false);
         }
     }

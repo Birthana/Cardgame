@@ -1,9 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class TurnManager : MonoBehaviour
 {
+    public Health playerHealth;
+
     public void StartTurn()
     {
         for (int i = 0; i < 5; i++)
@@ -16,6 +16,7 @@ public class TurnManager : MonoBehaviour
     public void EndTurn()
     {
         Hand.instance.GetComponent<LayoutManager>().RemoveAll();
+        playerHealth.EndTurn();
         StartTurn();
     }
 }
