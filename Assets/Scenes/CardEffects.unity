@@ -121,6 +121,57 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &178392826
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 178392828}
+  - component: {fileID: 178392827}
+  m_Layer: 0
+  m_Name: DraftManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &178392827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 178392826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5a2dd9d0a499f142855778fe70356f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cards:
+  - {fileID: 7048326375829212143, guid: 75c93aefaffb9b1479e46d8cd32921e1, type: 3}
+  - {fileID: 4835718892839724777, guid: 73244e40dddd07344a3a0aa64e0a0fb8, type: 3}
+  - {fileID: 1491975987232693339, guid: ac4ecf33c3fd9b940bea7b4a0aef52eb, type: 3}
+  - {fileID: 7048326375829212143, guid: 75c93aefaffb9b1479e46d8cd32921e1, type: 3}
+  - {fileID: 4835718892839724777, guid: 73244e40dddd07344a3a0aa64e0a0fb8, type: 3}
+  - {fileID: 1491975987232693339, guid: ac4ecf33c3fd9b940bea7b4a0aef52eb, type: 3}
+  chooseFromNumber: 3
+--- !u!4 &178392828
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 178392826}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.239806, y: -20, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &186606164
 GameObject:
   m_ObjectHideFlags: 0

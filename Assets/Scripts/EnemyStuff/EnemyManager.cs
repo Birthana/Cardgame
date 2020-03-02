@@ -33,5 +33,9 @@ public class EnemyManager : MonoBehaviour
     public void Remove(Enemy enemyToRemove)
     {
         enemies.Remove(enemyToRemove);
+        if (enemies.Count == 0)
+        {
+            DraftCardManager.instance.Draft();
+        }
     }
 }
