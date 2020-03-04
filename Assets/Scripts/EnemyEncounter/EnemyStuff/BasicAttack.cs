@@ -6,8 +6,8 @@ public class BasicAttack : EnemyAttack
 {
     public int damage;
 
-    public override void Attack()
+    public override void Attack(GameObject target)
     {
-        Player.instance.GetComponent<Health>().TakeDamage(damage);
+        target.GetComponent<Health>().TakeDamage(damage);
     }
 }

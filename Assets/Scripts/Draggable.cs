@@ -7,15 +7,19 @@ public class Draggable : MonoBehaviour
     private Camera mainCamera;
     private Vector3 screenPoint;
     private Vector3 offset;
+    [SerializeField] private EnergyManager energy;
+    [SerializeField] private CardManager cards;
 
     private void Start()
     {
         mainCamera = FindObjectOfType<Camera>();
+        energy = FindObjectOfType<EnergyManager>();
+        cards = FindObjectOfType<CardManager>();
     }
 
     private void OnMouseDown()
     {
-        if (Player.instance.GetCurrentEnergy() > 0 && this.GetComponent<Card>().level <= Player.instance.GetCurrentEnergy())
+        if (energy.GetCurrentEnergy() > 0 && this.GetComponent<Card>().level <= energy.GetCurrentEnergy())
         {
             screenPoint = mainCamera.WorldToScreenPoint(transform.position);
             offset = new Vector3(0, 0, 0);
@@ -25,7 +29,7 @@ public class Draggable : MonoBehaviour
 
     private void OnMouseDrag()
     {
-        if (Player.instance.GetCurrentEnergy() > 0 && this.GetComponent<Card>().level <= Player.instance.GetCurrentEnergy())
+        if (energy.GetCurrentEnergy() > 0 && this.GetComponent<Card>().level <= energy.GetCurrentEnergy())
         {
             this.GetComponent<BoxCollider2D>().enabled = false;
             if (this.GetComponent<Card>().hasTarget)
@@ -51,7 +55,7 @@ public class Draggable : MonoBehaviour
 
     private void OnMouseUp()
     {
-        if (Player.instance.GetCurrentEnergy() > 0 && this.GetComponent<Card>().level <= Player.instance.GetCurrentEnergy())
+        if (energy.GetCurrentEnergy() > 0 && this.GetComponent<Card>().level <= energy.GetCurrentEnergy())
         {
             this.GetComponent<BoxCollider2D>().enabled = true;
             if (this.GetComponent<Card>().hasTarget)
@@ -66,7 +70,7 @@ public class Draggable : MonoBehaviour
                         effects.SetTargets(hit.collider.gameObject);
                         effects.AddToStack();
                         CardEffectStack.instance.ResolveCardEffect();
-                        Hand.instance.RemoveToDiscard(this.gameObject.GetComponent<Card>());
+                        cards.PlayCard(this.gameObject.GetComponent<Card>());
                         this.gameObject.SetActive(false);
                     }
                 }

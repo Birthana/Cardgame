@@ -5,25 +5,32 @@ using TMPro;
 
 public class LayoutManager : MonoBehaviour
 {
+    [Space]
+    [Header("Settings")]
+    [Tooltip("Space between cards(from middle of object). Default: 10")]
     public float padding;
+    [Tooltip("Tilt of the card depends on its position. Default: -10")]
     public float totalTwist;
+    [Tooltip("Small Vertical Transformation. Default: 0.3")]
     public float scalingFactor;
     private Vector3 startPosition;
     private float startTwist;
     private float twistPerCard;
     private List<Card> groupedCards;
+    [SerializeField] private CardManager cards;
 
     private void Start()
     {
-        startPosition = this.transform.position;
+        startPosition = transform.position;
         groupedCards = new List<Card>();
+        cards = FindObjectOfType<CardManager>();
     }
 
     public void AddCard(Card card)
     {
         if (card != null)
         {
-            card.gameObject.transform.SetParent(this.gameObject.transform);
+            card.gameObject.transform.SetParent(gameObject.transform);
             groupedCards.Add(card);
             startTwist = -1f * (totalTwist / 2f);
             twistPerCard = totalTwist / groupedCards.Count;
@@ -64,14 +71,13 @@ public class LayoutManager : MonoBehaviour
         foreach (Card card in groupedCards.ToArray())
         {
             RemoveToDiscard(card);
-            //Destroy(card.gameObject);
             card.gameObject.SetActive(false);
         }
     }
 
     public void RemoveToDiscard(Card card)
     {
-        Deck.instance.AddToDiscard(card);
+        cards.AddToDrop(card);
         RemoveCard(card);
     }
 }

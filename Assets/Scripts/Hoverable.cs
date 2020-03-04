@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Hoverable : MonoBehaviour
 {
@@ -10,7 +8,6 @@ public class Hoverable : MonoBehaviour
     {
         tempCard = Instantiate(this.gameObject, this.transform.position + new Vector3(10, 20, -9), Quaternion.identity);
         tempCard.transform.localScale = new Vector3(1.5f, 1.5f, 0);
-        //tempCard.GetComponent<Draggable>().AddLayers(10);
         tempCard.GetComponent<BoxCollider2D>().enabled = false;
     }
 

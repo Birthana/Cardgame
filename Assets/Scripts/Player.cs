@@ -6,17 +6,15 @@ using TMPro;
 public class Player : MonoBehaviour
 {
     public static Player instance = null;
-    public int maxEnergy;
-    public TextMeshPro energyCounter;
-    private int currentEnergy;
+    public Card[] cards;
+    public int[] count;
 
     private void Awake()
     {
         if (instance == null)
         {
             instance = this;
-            currentEnergy = maxEnergy;
-            energyCounter.text = currentEnergy + " / " + maxEnergy;
+            SetPlayerInformation();
         }
         else
         {
@@ -25,20 +23,16 @@ public class Player : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    public int GetCurrentEnergy()
+    public void SetPlayerInformation()
     {
-        return currentEnergy;
-    }
-
-    public void SpendEnergy(int energyCost)
-    {
-        currentEnergy -= energyCost;
-        energyCounter.text = currentEnergy + " / " + maxEnergy;
-    }
-
-    public void StartTurn()
-    {
-        currentEnergy = maxEnergy;
-        energyCounter.text = currentEnergy + " / " + maxEnergy;
+        PlayerInformation.SetHealth(60);
+        PlayerInformation.SetCurrency(99);
+        for (int i = 0; i < cards.Length; i++)
+        {
+            for (int j = 0; j < count[i]; j++)
+            {
+                PlayerInformation.AddCard(cards[i]);
+            }
+        }
     }
 }

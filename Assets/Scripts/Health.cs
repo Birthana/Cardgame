@@ -12,7 +12,7 @@ public class Health : MonoBehaviour
     {
         currentHealth = maxHealth;
         block = 0;
-        healthText.text = "" + (currentHealth + block) + " / " + maxHealth;
+        UpdateUI();
     }
 
     public void TakeDamage(int damage)
@@ -27,9 +27,10 @@ public class Health : MonoBehaviour
         {
             block -= damage;
         }
-        healthText.text = "" + (currentHealth + block) + " / " + maxHealth;
+        UpdateUI();
         if (currentHealth <= 0)
         {
+            GetComponent<EnemyManager>().Remove(gameObject.GetComponent<Enemy>());
             Destroy(this.gameObject);
         }
     }
@@ -37,12 +38,24 @@ public class Health : MonoBehaviour
     public void AddBlock(int block)
     {
         this.block += block;
-        healthText.text = "" + (currentHealth + this.block) + " / " + maxHealth;
+        UpdateUI();
     }
 
-    public void EndTurn()
+    public void RemoveAllBlock()
     {
         block = 0;
-        healthText.text = "" + (currentHealth + this.block) + " / " + maxHealth;
+        UpdateUI();
+    }
+
+    public void SetMaxHealth(int playerHealth)
+    {
+        maxHealth = playerHealth;
+        currentHealth = maxHealth;
+        UpdateUI();
+    }
+
+    public void UpdateUI()
+    {
+        healthText.text = "" + (currentHealth + block) + " / " + maxHealth;
     }
 }

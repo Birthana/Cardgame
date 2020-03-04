@@ -4,21 +4,11 @@ using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
 {
-    public static EnemyManager instance = null;
-    public List<Enemy> enemies;
+    [SerializeField] private List<Enemy> enemies;
 
-    private void Awake()
+    public void SpawnEnemies()
     {
-        if (instance == null)
-        {
-            instance = this;
-            enemies = new List<Enemy>(FindObjectsOfType<Enemy>());
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-        DontDestroyOnLoad(gameObject);
+        enemies = new List<Enemy>(FindObjectsOfType<Enemy>(););
     }
 
     public IEnumerator Attacking()

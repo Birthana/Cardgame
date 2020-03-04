@@ -42,7 +42,6 @@ public class DraftCardManager : MonoBehaviour
             {
                 rngIndex[count] = tempIndex;
                 count++;
-                Debug.Log(tempIndex);
             }
         }
         return rngIndex;
