@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 6903272223873386961}
   - component: {fileID: 6903272223873386967}
   - component: {fileID: 6903272223873386960}
-  - component: {fileID: 6903272223873386966}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -94,30 +93,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 6903272223873386962}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 543fae3ae61f93741b9a5cd2f85efa6a, type: 3}
+  m_Script: {fileID: 11500000, guid: db6eeb107ec941002adb3aed67f51d2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 50
-  currentHealth: 0
-  healthText: {fileID: 6903272224119662262}
---- !u!114 &6903272223873386966
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6903272223873386962}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6da44493c582c024b95c995c5265ede2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHorizontalDistance: 75
-  maxDegree: 360
-  horizontalSpeed: 5
-  verticalSpeed: 50
-  amp1: 10
-  startPosition: {x: 0, y: 0, z: 0}
+  maxEnergy: 2
 --- !u!1 &6903272224119662256
 GameObject:
   m_ObjectHideFlags: 0
@@ -131,6 +111,7 @@ GameObject:
   - component: {fileID: 6903272224119662260}
   - component: {fileID: 6903272224119662261}
   - component: {fileID: 6903272224119662262}
+  - component: {fileID: 3188912209825993505}
   m_Layer: 0
   m_Name: PlayerHealthText
   m_TagString: Untagged
@@ -325,3 +306,17 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   m_maskType: 0
+--- !u!114 &3188912209825993505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6903272224119662256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae4fba42a476178239c810edd7066d9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useStatsFrom: {fileID: 6903272223873386960}
+  displayOn: {fileID: 6903272224119662262}

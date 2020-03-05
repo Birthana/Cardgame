@@ -3,6 +3,6 @@
     public override void Resolve()
     {
         //Debug.Log("Deal " + damage + " Damage");
-        target.GetComponent<Health>().TakeDamage(value);
+        // target.GetComponent<Health>().TakeDamage(value);
     }
 }

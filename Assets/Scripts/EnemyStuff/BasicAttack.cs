@@ -8,6 +8,6 @@ public class BasicAttack : EnemyAttack
 
     public override void Attack()
     {
-        Player.instance.GetComponent<Health>().TakeDamage(damage);
+        // Player.instance.GetComponent<Health>().TakeDamage(damage);
     }
 }

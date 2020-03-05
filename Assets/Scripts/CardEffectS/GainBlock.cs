@@ -6,6 +6,6 @@ public class GainBlock : BaseCardEffect
 {
     public override void Resolve()
     {
-        target.GetComponent<Health>().AddBlock(value);
+        // target.GetComponent<Health>().AddBlock(value);
     }
 }
