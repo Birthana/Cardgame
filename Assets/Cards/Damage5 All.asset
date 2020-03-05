@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 32d3a60a902b0df4980b402dd2b1d64d, type: 3}
-  m_Name: Test Card
+  m_Name: Damage5 All
   m_EditorClassIdentifier: 
-  cardName: Test Name
-  level: 1
-  cardEffectText: Increases your block by 5
+  cardName: Slash
+  level: 2
+  cardEffectText: Deals 5 DAMAGE to every enemy.
   target: 1
   effects:
-  - {fileID: 11400000, guid: d1862cfeb2d05f4a8bfebd35c114949d, type: 2}
+  - {fileID: 11400000, guid: fe3868125ee438f198dba69beab6c1c4, type: 2}

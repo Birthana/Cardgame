@@ -35,7 +35,7 @@ public class FieldEntity : MonoBehaviour
             _block = 0;
             _health -= unblockedDamage;
             OnStatsChanged?.Invoke();
-            if (_health == 0)
+            if (_health <= 0)
             {
                 OnDeath?.Invoke();
                 Destroy(this.gameObject);

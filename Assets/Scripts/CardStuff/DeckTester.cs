@@ -24,6 +24,7 @@ public class DeckTester : MonoBehaviour
                 deck.Add(Instantiate(request.card));
             }
         }
+        deck.Reset();
         deck.Draw(draw);
     }
 }

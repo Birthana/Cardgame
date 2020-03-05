@@ -40,7 +40,7 @@ public class Deck
         }
         // Then, shuffle the deck.
         for (int index = 0; index < deck.Count; index++) {
-            int swapIndex = UnityEngine.Random.Range(index + 1, deck.Count);
+            int swapIndex = UnityEngine.Random.Range(0, deck.Count);
             (deck[index], deck[swapIndex]) = (deck[swapIndex], deck[index]);
         }
         OnShuffle?.Invoke();
