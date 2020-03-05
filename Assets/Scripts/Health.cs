@@ -7,12 +7,15 @@ public class Health : MonoBehaviour
     [SerializeField] private int currentHealth;
     [SerializeField] private int block;
     public TextMeshPro healthText;
+    //Temorary. Need to decouple.
+    [SerializeField] private EnemyManager enemies;
 
     private void Start()
     {
         currentHealth = maxHealth;
         block = 0;
         UpdateUI();
+        enemies = FindObjectOfType<EnemyManager>();
     }
 
     public void TakeDamage(int damage)
@@ -30,7 +33,7 @@ public class Health : MonoBehaviour
         UpdateUI();
         if (currentHealth <= 0)
         {
-            GetComponent<EnemyManager>().Remove(gameObject.GetComponent<Enemy>());
+            enemies.Remove(gameObject.GetComponent<Enemy>());
             Destroy(this.gameObject);
         }
     }

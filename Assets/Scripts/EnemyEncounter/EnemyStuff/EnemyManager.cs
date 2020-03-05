@@ -8,7 +8,7 @@ public class EnemyManager : MonoBehaviour
 
     public void SpawnEnemies()
     {
-        enemies = new List<Enemy>(FindObjectsOfType<Enemy>(););
+        enemies = new List<Enemy>(FindObjectsOfType<Enemy>());
     }
 
     public IEnumerator Attacking()
@@ -25,7 +25,7 @@ public class EnemyManager : MonoBehaviour
         enemies.Remove(enemyToRemove);
         if (enemies.Count == 0)
         {
-            DraftCardManager.instance.Draft();
+            //DraftCardManager.instance.Draft();
         }
     }
 }
