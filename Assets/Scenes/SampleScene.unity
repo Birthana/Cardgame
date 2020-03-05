@@ -1650,6 +1650,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1528814567 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3381135200075131666, guid: e4f054834cc37c920a806a4daff95228,
+    type: 3}
+  m_PrefabInstance: {fileID: 4041169193942367182}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1528814568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1528814567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 100882aa44d5234eb8af95389fed24dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deckContents:
+  - card: {fileID: 11400000, guid: df8aa0eef511f810fbb5a70b36190b94, type: 2}
+    quantity: 20
+  draw: 5
 --- !u!1 &1546286331
 GameObject:
   m_ObjectHideFlags: 0
@@ -2119,7 +2141,7 @@ PrefabInstance:
     - target: {fileID: 3729688928649775645, guid: e4f054834cc37c920a806a4daff95228,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: -63.103004
       objectReference: {fileID: 0}
     - target: {fileID: 3729688928649775645, guid: e4f054834cc37c920a806a4daff95228,
         type: 3}
@@ -2129,7 +2151,7 @@ PrefabInstance:
     - target: {fileID: 3729688928649775645, guid: e4f054834cc37c920a806a4daff95228,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: -6.37
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3729688928649775645, guid: e4f054834cc37c920a806a4daff95228,
         type: 3}
@@ -2139,7 +2161,7 @@ PrefabInstance:
     - target: {fileID: 3729688928649775645, guid: e4f054834cc37c920a806a4daff95228,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3729688928649775645, guid: e4f054834cc37c920a806a4daff95228,
         type: 3}

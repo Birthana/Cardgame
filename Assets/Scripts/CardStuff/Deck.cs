@@ -95,6 +95,9 @@ public class Deck
     /// draw pile. Emits OnShuffle after everything is done.
     /// </summary>
     public void Reset() {
+        foreach (Card card in hand) {
+            OnDiscard?.Invoke(card);
+        }
         discard.AddRange(hand);
         hand.Clear();
         ShuffleDiscardIntoDeck();

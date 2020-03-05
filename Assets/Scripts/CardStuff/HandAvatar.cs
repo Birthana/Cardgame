@@ -5,25 +5,46 @@ using UnityEngine;
 public class HandAvatar : MonoBehaviour
 {
     public CardAvatar cardAvatarPrefab;
-    public Card[] cards;
     public float CARD_WIDTH, CARD_HEIGHT;
     public float CARD_SPACING = 400.0f;
     public float CARD_ROTATION = 3.0f;
     public float EMPHASIZED_SCALE = 1.8f;
 
-    private List<CardAvatar> avatars = new List<CardAvatar>();
+    private List<Card> cards = new List<Card>();
+    private List<CardAvatar> cardAvatars = new List<CardAvatar>();
     private CardAvatar emphasized, waitingToBeEmphasized;
 
-    void Start()
+    void OnEnable()
     {
-        foreach (Card card in cards)
-        {
-            CardAvatar avatar = Instantiate(cardAvatarPrefab, this.transform);
-            avatar.displaying = card;
-            avatar.OnHover += Emphasize;
-            avatar.OnBlur += Deemphasize;
-            avatars.Add(avatar);
-        }
+        Deck.instance.OnDraw += MakeCardAvatar;
+        Deck.instance.OnDiscard += RemoveCardAvatar;
+    }
+
+    void OnDisable()
+    {
+        Deck.instance.OnDraw -= MakeCardAvatar;
+        Deck.instance.OnDiscard -= RemoveCardAvatar;
+    }
+
+    private void MakeCardAvatar(Card forCard)
+    {
+        CardAvatar avatar = Instantiate(cardAvatarPrefab, this.transform);
+        avatar.displaying = forCard;
+        avatar.OnHover += Emphasize;
+        avatar.OnBlur += Deemphasize;
+        cards.Add(forCard);
+        cardAvatars.Add(avatar);
+        UpdateAvatarTransforms();
+    }
+
+    private void RemoveCardAvatar(Card forCard)
+    {
+        int index = cards.IndexOf(forCard);
+        if (index == -1) return;
+        // This doesn't have any negative effects if the card wasn't emphasized in the first place.
+        Deemphasize(cardAvatars[index]);
+        cards.RemoveAt(index);
+        cardAvatars.RemoveAt(index);
         UpdateAvatarTransforms();
     }
 
@@ -55,12 +76,12 @@ public class HandAvatar : MonoBehaviour
 
     private void UpdateAvatarTransforms()
     {
-        int emphasizedIndex = avatars.IndexOf(emphasized);
+        int emphasizedIndex = cardAvatars.IndexOf(emphasized);
         // Handles both cases of `emphasized` being null and of being something not in the list.
         bool somethingIsEmphasized = emphasizedIndex > -1;
-        for (int index = 0; index < avatars.Count; index++)
+        for (int index = 0; index < cardAvatars.Count; index++)
         {
-            float transformAmount = ((float)index) - ((float)avatars.Count - 1) / 2.0f;
+            float transformAmount = ((float)index) - ((float)cardAvatars.Count - 1) / 2.0f;
             if (somethingIsEmphasized)
             {
                 if (index < emphasizedIndex)
@@ -80,7 +101,7 @@ public class HandAvatar : MonoBehaviour
                 index == emphasizedIndex ? 0 : 1
             ) * CARD_SPACING;
 
-            CardAvatar avatar = avatars[index];
+            CardAvatar avatar = cardAvatars[index];
             avatar.transform.localPosition = position;
             avatar.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.back);
 

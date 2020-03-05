@@ -45,13 +45,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardAvatarPrefab: {fileID: 2519713381551346388, guid: ac4ecf33c3fd9b940bea7b4a0aef52eb,
     type: 3}
-  cards:
-  - {fileID: 11400000, guid: df8aa0eef511f810fbb5a70b36190b94, type: 2}
-  - {fileID: 11400000, guid: df8aa0eef511f810fbb5a70b36190b94, type: 2}
-  - {fileID: 11400000, guid: df8aa0eef511f810fbb5a70b36190b94, type: 2}
-  - {fileID: 11400000, guid: df8aa0eef511f810fbb5a70b36190b94, type: 2}
-  - {fileID: 11400000, guid: df8aa0eef511f810fbb5a70b36190b94, type: 2}
   CARD_WIDTH: 19
   CARD_HEIGHT: 26
   CARD_SPACING: 400
   CARD_ROTATION: 3
+  EMPHASIZED_SCALE: 1.8
