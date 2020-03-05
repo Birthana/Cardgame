@@ -131,7 +131,6 @@ GameObject:
   m_Component:
   - component: {fileID: 186606165}
   - component: {fileID: 186606169}
-  - component: {fileID: 186606168}
   - component: {fileID: 186606167}
   - component: {fileID: 186606166}
   m_Layer: 0
@@ -196,22 +195,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.32, y: 0.32}
   m_EdgeRadius: 0
---- !u!114 &186606168
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 186606164}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 543fae3ae61f93741b9a5cd2f85efa6a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 12
-  currentHealth: 0
-  block: 0
-  healthText: {fileID: 632211826}
 --- !u!212 &186606169
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1464,7 +1447,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1111753527}
   - component: {fileID: 1111753531}
-  - component: {fileID: 1111753530}
   - component: {fileID: 1111753529}
   - component: {fileID: 1111753528}
   m_Layer: 0
@@ -1529,22 +1511,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.32, y: 0.32}
   m_EdgeRadius: 0
---- !u!114 &1111753530
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1111753526}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 543fae3ae61f93741b9a5cd2f85efa6a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 12
-  currentHealth: 0
-  block: 0
-  healthText: {fileID: 813806589}
 --- !u!212 &1111753531
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1659,7 +1625,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1528814567 stripped
 GameObject:
@@ -1783,7 +1749,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1814521630}
   - component: {fileID: 1814521629}
-  - component: {fileID: 1814521631}
   m_Layer: 0
   m_Name: Battlefield
   m_TagString: Untagged
@@ -1834,18 +1799,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1814521631
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1814521628}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06734144556422c4395bc2694fae744b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1890534734
 GameObject:
   m_ObjectHideFlags: 0
@@ -1985,7 +1938,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2133889624}
   - component: {fileID: 2133889628}
-  - component: {fileID: 2133889627}
   - component: {fileID: 2133889626}
   - component: {fileID: 2133889625}
   m_Layer: 0
@@ -2050,22 +2002,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.32, y: 0.32}
   m_EdgeRadius: 0
---- !u!114 &2133889627
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2133889623}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 543fae3ae61f93741b9a5cd2f85efa6a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 12
-  currentHealth: 0
-  block: 0
-  healthText: {fileID: 631686153}
 --- !u!212 &2133889628
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2235,7 +2171,7 @@ PrefabInstance:
     - target: {fileID: 6903272223873386961, guid: 21aeccc4ebf62534e8108b245ec92113,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6903272223873386961, guid: 21aeccc4ebf62534e8108b245ec92113,
         type: 3}

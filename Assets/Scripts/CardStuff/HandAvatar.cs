@@ -5,14 +5,24 @@ using UnityEngine;
 public class HandAvatar : MonoBehaviour
 {
     public CardAvatar cardAvatarPrefab;
+    public LineRenderer linePrefab;
     public float CARD_WIDTH, CARD_HEIGHT;
     public float CARD_SPACING = 400.0f;
     public float CARD_ROTATION = 3.0f;
     public float EMPHASIZED_SCALE = 1.8f;
+    public float SELECTED_SCALE = 2.1f;
 
     private List<Card> cards = new List<Card>();
     private List<CardAvatar> cardAvatars = new List<CardAvatar>();
+    // Emphasized = a card that is rendered larger because the user is hovering over it.
+    // waitingToBeEmphasized = a card that will be emphasized if the currently emphasized card is
+    // deemphasized. This allows the emphasized card to visually overlap other cards without causing
+    // logic problems.
     private CardAvatar emphasized, waitingToBeEmphasized;
+    // Selected = a card the user has clicked on and is about to play. The user can put it back by
+    // clicking on it again or by clicking on another card to select.
+    private CardAvatar selected = null;
+    private Card.TargetMode selectionMode;
 
     void OnEnable()
     {
@@ -26,6 +36,82 @@ public class HandAvatar : MonoBehaviour
         Deck.instance.OnDiscard -= RemoveCardAvatar;
     }
 
+    void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            // The user clicked the mouse while a card was already selected.
+            if (selected != null)
+            {
+                // The user clicked the selected card, deselect it.
+                if (selected == emphasized) Deselect(selected);
+                // The user clicked on another card. Select that one instead.
+                else if (emphasized != null) Select(emphasized);
+                else
+                {
+                    // The user clicked outside the hand avatar. Try to play the card. If the
+                    // card could not be played, deselect it instead.
+                    bool success = TryPlay();
+                    if (!success) Deselect(selected);
+                }
+            }
+            else if (emphasized != null)
+            {
+                // If a card is emphasized (enlarged because hovered), then select it.
+                Select(emphasized);
+            }
+
+            // Update the current selection mode based on how the selected card targets things.
+            if (selected != null)
+            {
+                int cardIndex = cardAvatars.IndexOf(selected);
+                selectionMode = cards[cardIndex].target;
+            }
+            UpdateAvatarTransforms();
+        }
+    }
+
+    // Tries to play the currently selected card. If the currently selected card could not be
+    // played (usually because it requries selecting an enemy but no enemy was under the mouse)
+    // then false will be returned and the card's effects will not be played.
+    private bool TryPlay()
+    {
+        int cardIndex = cardAvatars.IndexOf(selected);
+        if (cardIndex < 0) return false;
+        bool success = false;
+        Card card = cards[cardIndex];
+        if (selectionMode == Card.TargetMode.AllEnemies)
+        {
+            // Cast all the enemies to generic FieldEntitys.
+            card.Play(EnemyManager.instance.enemies.ConvertAll(enemy => (FieldEntity)enemy));
+            success = true;
+        }
+        else if (selectionMode == Card.TargetMode.Player)
+        {
+            card.Play(Player.instance);
+            success = true;
+        }
+        else if (selectionMode == Card.TargetMode.SpecificEnemy)
+        {
+            var mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit2D mouseHit = Physics2D.Raycast(mouseRay.origin, Vector2.zero);
+            if (mouseHit) {
+                Enemy possibleEnemy = mouseHit.collider.gameObject.GetComponent<Enemy>();
+                if (possibleEnemy) {
+                    card.Play(possibleEnemy);
+                    success = true;
+                }
+            }
+        }
+
+        if (success)
+        {
+            Deck.instance.Discard(card);
+        }
+        return success;
+    }
+
+    // Creates a new avatar to be the visual representation of the given card.
     private void MakeCardAvatar(Card forCard)
     {
         CardAvatar avatar = Instantiate(cardAvatarPrefab, this.transform);
@@ -37,17 +123,21 @@ public class HandAvatar : MonoBehaviour
         UpdateAvatarTransforms();
     }
 
+    // Removes the visual representation of the given card.
     private void RemoveCardAvatar(Card forCard)
     {
         int index = cards.IndexOf(forCard);
         if (index == -1) return;
         // This doesn't have any negative effects if the card wasn't emphasized in the first place.
         Deemphasize(cardAvatars[index]);
+        Deselect(cardAvatars[index]);
+        Destroy(cardAvatars[index].gameObject);
         cards.RemoveAt(index);
         cardAvatars.RemoveAt(index);
         UpdateAvatarTransforms();
     }
 
+    // Emphasizes a card to make it show up bigger.
     private void Emphasize(CardAvatar avatar)
     {
         if (emphasized == null)
@@ -61,6 +151,7 @@ public class HandAvatar : MonoBehaviour
         }
     }
 
+    // Deemphasizes a card to return it to its normal size.
     private void Deemphasize(CardAvatar avatar)
     {
         if (avatar == emphasized)
@@ -74,16 +165,58 @@ public class HandAvatar : MonoBehaviour
         }
     }
 
+    // Select a card as about to be played. In this state, if the user clicks on a valid target,
+    // the selected card will be played.
+    private void Select(CardAvatar avatar) {
+        selected = avatar;
+    }
+
+    // Deselects the given card, if it is currently selected.
+    private void Deselect(CardAvatar avatar) {
+        if (selected == avatar) {
+            selected = null;
+        }
+        // This helps mute a minor visual hiccup.
+        Deemphasize(avatar);
+    }
+
+    // Reposition all the card avatars, taking into account their number as well as which one
+    // is emphasized or selected (if any.)
     private void UpdateAvatarTransforms()
     {
         int emphasizedIndex = cardAvatars.IndexOf(emphasized);
+        int selectedIndex = cardAvatars.IndexOf(selected);
         // Handles both cases of `emphasized` being null and of being something not in the list.
         bool somethingIsEmphasized = emphasizedIndex > -1;
+        bool somethingIsSelected = selectedIndex > -1;
+
+        // The split between emphasized / selected makes the logic smoother elsewhere at the cost
+        // of making this update function a little more complex.
+        bool somethingIsBig = somethingIsEmphasized || somethingIsSelected;
+        int bigCardIndex = somethingIsSelected ? selectedIndex : emphasizedIndex;
         for (int index = 0; index < cardAvatars.Count; index++)
         {
             float transformAmount = ((float)index) - ((float)cardAvatars.Count - 1) / 2.0f;
-            if (somethingIsEmphasized)
+            if (somethingIsSelected)
             {
+                // Make all the other cards act like the selected card isn't in the hand.
+                if (index < selectedIndex)
+                {
+                    transformAmount += 0.5f;
+                }
+                else if (index > selectedIndex)
+                {
+                    transformAmount -= 0.5f;
+                }
+                else
+                {
+                    // Selected card should appear dead-center.
+                    transformAmount = 0.0f;
+                }
+            }
+            else if (somethingIsEmphasized)
+            {
+                // Make all the other cards give the emphasized card a little more space.
                 if (index < emphasizedIndex)
                 {
                     transformAmount -= 0.2f;
@@ -93,31 +226,37 @@ public class HandAvatar : MonoBehaviour
                     transformAmount += 0.2f;
                 }
             }
+
             float angle = transformAmount * CARD_ROTATION;
             Vector3 position = new Vector3(
                 Mathf.Sin(angle * Mathf.Deg2Rad),
                 Mathf.Cos(angle * Mathf.Deg2Rad) - 1,
-                // The emphasized card should render on top of everything else.
-                index == emphasizedIndex ? 0 : 1
+                // The big card should render on top of everything else.
+                index == bigCardIndex ? 0 : 1
             ) * CARD_SPACING;
+            float scale;
+            if (index == bigCardIndex)
+            {
+                scale = somethingIsSelected ? SELECTED_SCALE : EMPHASIZED_SCALE;
+            }
+            else
+            {
+                scale = 1;
+            }
+
+            if (somethingIsSelected && index != selectedIndex)
+            {
+                position.y -= CARD_HEIGHT / 2;
+            }
 
             CardAvatar avatar = cardAvatars[index];
             avatar.transform.localPosition = position;
             avatar.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.back);
-
-            Vector3 scale;
-            if (index == emphasizedIndex)
-            {
-                scale = new Vector3(EMPHASIZED_SCALE, EMPHASIZED_SCALE, EMPHASIZED_SCALE);
-            }
-            else
-            {
-                scale = new Vector3(1, 1, 1);
-            }
-            avatar.transform.localScale = scale;
+            avatar.transform.localScale = new Vector3(scale, scale, scale);
         }
     }
 
+    // Draw an in-editor gizmo representing the position a card may occupy.
     private void DrawGizmoCard(Vector3 center, float angle)
     {
         // half of width, height
@@ -135,6 +274,8 @@ public class HandAvatar : MonoBehaviour
         Gizmos.DrawLine(bl, tl);
     }
 
+    // Draw an in-editor gizmo showing a possible layout of five cards given the parameters entered
+    // into the inspector.
     private void DrawGizmosImpl()
     {
         for (float offset = -2.0f; offset <= 2.0f; offset += 1.0f)
@@ -157,6 +298,7 @@ public class HandAvatar : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
+        // Draw the gizmo in a yellow color to indicate the component is selected.
         Gizmos.color = Color.yellow;
         DrawGizmosImpl();
     }

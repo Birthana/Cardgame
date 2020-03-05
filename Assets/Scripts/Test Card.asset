@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32d3a60a902b0df4980b402dd2b1d64d, type: 3}
   m_Name: Test Card
   m_EditorClassIdentifier: 
-  cardName: Test Name
+  cardName: New Card
   level: 1
-  cardEffectText: Increases your block by 5
-  target: 1
+  cardEffectText: Does nothing.
+  target: 2
   effects:
-  - {fileID: 11400000, guid: d1862cfeb2d05f4a8bfebd35c114949d, type: 2}
+  - {fileID: 0}
