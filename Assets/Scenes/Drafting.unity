@@ -598,7 +598,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: fce67c48aad515cc6982f8ed6a1943f9, type: 2}
   - {fileID: 11400000, guid: 9760353460d50b02a85e37c6ddb2c7e1, type: 2}
   - {fileID: 11400000, guid: 7b17f43cd0c480bcdbefd927dbd3d113, type: 2}
-  chooseFromNumber: 3
+  - {fileID: 11400000, guid: 3391d3131c9013c49adc8fcea015fa5b, type: 2}
+  chooseFromNumber: 4
   CARD_SCALE: 1.5
   CARD_SPACING: 600
   draftableCards: []

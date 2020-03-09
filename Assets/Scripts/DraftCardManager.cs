@@ -7,8 +7,8 @@ public class DraftCardManager : MonoBehaviour
     public CardAvatar cardAvatarPrefab;
     public List<Card> cardPool;
     public int chooseFromNumber;
-    public float CARD_SCALE = 1.5f;
-    public float CARD_SPACING = 600.0f;
+    public float CARD_SCALE = 1.2f;
+    public float CARD_SPACING = 500.0f;
     [SerializeField] private List<Card> draftableCards = new List<Card>();
     [SerializeField] private List<CardAvatar> cardAvatars = new List<CardAvatar>();
     private bool drafting;
@@ -33,6 +33,7 @@ public class DraftCardManager : MonoBehaviour
                     if (chosenCard)
                     {
                         Debug.Log("Add to deck: " + chosenCard);
+                        Deck.instance.Add(chosenCard);
                         drafting = false;
                         foreach (CardAvatar card in cardAvatars)
                         {
@@ -90,7 +91,8 @@ public class DraftCardManager : MonoBehaviour
             avatar.displaying = draftableCards[i];
             cardAvatars.Add(avatar);
 
-            float angle = (i - 1) * 3.0f;
+            float transformAmount = ((float)i) - ((float)draftableCards.Count - 1) / 2;
+            float angle = transformAmount * 3.0f;
             Vector3 position = new Vector3(
                 Mathf.Sin(angle * Mathf.Deg2Rad),
                 0,
