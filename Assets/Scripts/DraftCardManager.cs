@@ -4,60 +4,100 @@ using UnityEngine;
 
 public class DraftCardManager : MonoBehaviour
 {
-
-    public static DraftCardManager instance = null;
-    public List<Card> cards;
+    public CardAvatar cardAvatarPrefab;
+    public List<Card> cardPool;
     public int chooseFromNumber;
+    public float CARD_SCALE = 1.5f;
+    public float CARD_SPACING = 600.0f;
+    [SerializeField] private List<Card> draftableCards = new List<Card>();
+    [SerializeField] private List<CardAvatar> cardAvatars = new List<CardAvatar>();
+    private bool drafting;
 
-    private void Awake()
+    private void Start()
     {
-        if (instance == null)
+        //test
+        Draft();
+    }
+
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
         {
-            instance = this;
+            if (drafting)
+            {
+                var mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit2D mouseHit = Physics2D.Raycast(mouseRay.origin, Vector2.zero);
+                if (mouseHit)
+                {
+                    Card chosenCard = mouseHit.collider.gameObject.GetComponent<CardAvatar>()?.displaying;
+                    if (chosenCard)
+                    {
+                        Debug.Log("Add to deck: " + chosenCard);
+                        drafting = false;
+                        foreach (CardAvatar card in cardAvatars)
+                        {
+                            Destroy(card.gameObject);
+                        }
+                        cardAvatars.Clear();
+                    }
+                }
+            }
         }
-        else
-        {
-            Destroy(gameObject);
-        }
-        DontDestroyOnLoad(gameObject);
     }
 
     public void Draft()
     {
-        int[] rngIndex = GetRandomNumbers(chooseFromNumber);
-        for (int i = 0; i < rngIndex.Length; i++)
+        drafting = true;
+        for (int i = 0; i < chooseFromNumber; i++)
         {
-            Instantiate(cards[rngIndex[i]], this.transform.position, Quaternion.identity);
+            ChooseFromCardPool();
+        }
+        DisplayDraftCards();
+    }
+
+    public void ChooseFromCardPool()
+    {
+        bool isUnique = false;
+        while (!isUnique)
+        {
+            int randomNumber = Random.Range(0, cardPool.Count);
+            Card draftCard = cardPool[randomNumber];
+            isUnique = CheckDraftCardUniqueness(draftCard);
+            if (isUnique)
+            {
+                draftableCards.Add(draftCard);
+            }
         }
     }
 
-    public int[] GetRandomNumbers(int chooseFromNumber)
+    public bool CheckDraftCardUniqueness(Card draftCard)
     {
-        int[] rngIndex = new int[chooseFromNumber];
-        int count = 0;
-        while (count < chooseFromNumber)
+        bool isUnique = true;
+        foreach (Card card in draftableCards)
         {
-            int tempIndex = Random.Range(0, cards.Count);
-            if (CheckUniqueness(rngIndex, tempIndex))
-            {
-                rngIndex[count] = tempIndex;
-                count++;
-                Debug.Log(tempIndex);
-            }
+            if (card == draftCard)
+                isUnique = false;
         }
-        return rngIndex;
+        return isUnique;
     }
 
-    public bool CheckUniqueness(int[] rngIndex, int tempIndex)
+    public void DisplayDraftCards()
     {
-        bool unique = true;
-        foreach (int index in rngIndex)
+        for (int i = 0; i < draftableCards.Count; i++)
         {
-            if (index.Equals(tempIndex))
-            {
-                unique = false;
-            }
+            //Adds to child of gameobject
+            CardAvatar avatar = Instantiate(cardAvatarPrefab, this.transform);
+            avatar.displaying = draftableCards[i];
+            cardAvatars.Add(avatar);
+
+            float angle = (i - 1) * 3.0f;
+            Vector3 position = new Vector3(
+                Mathf.Sin(angle * Mathf.Deg2Rad),
+                0,
+                0
+                ) * CARD_SPACING;
+            avatar.transform.localPosition = position;
+            avatar.transform.localScale = new Vector3(CARD_SCALE, CARD_SCALE, CARD_SCALE);
         }
-        return unique;
     }
 }
