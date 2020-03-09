@@ -29,11 +29,11 @@ public class DraftCardManager : MonoBehaviour
                 RaycastHit2D mouseHit = Physics2D.Raycast(mouseRay.origin, Vector2.zero);
                 if (mouseHit)
                 {
-                    Card chosenCard = mouseHit.collider.gameObject.GetComponent<CardAvatar>()?.displaying;
-                    if (chosenCard)
+                    CardAvatar chosenCard = mouseHit.collider.gameObject.GetComponent<CardAvatar>();
+                    if (CheckIsDraftableCard(chosenCard))
                     {
-                        Debug.Log("Add to deck: " + chosenCard);
-                        Deck.instance.Add(chosenCard);
+                        Debug.Log("Add to deck: " + chosenCard.displaying);
+                        Deck.instance.Add(chosenCard.displaying);
                         drafting = false;
                         foreach (CardAvatar card in cardAvatars)
                         {
@@ -44,6 +44,21 @@ public class DraftCardManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    public bool CheckIsDraftableCard(CardAvatar chosenCard)
+    {
+        bool isDraftableCard = false;
+        if (chosenCard == null)
+            return false;
+        foreach (CardAvatar card in cardAvatars)
+        {
+            if (card == chosenCard)
+            {
+                isDraftableCard = true;
+            }
+        }
+        return isDraftableCard;
     }
 
     public void Draft()
