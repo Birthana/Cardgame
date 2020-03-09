@@ -54,9 +54,7 @@ public class DraftCardManager : MonoBehaviour
         foreach (CardAvatar card in cardAvatars)
         {
             if (card == chosenCard)
-            {
                 isDraftableCard = true;
-            }
         }
         return isDraftableCard;
     }
@@ -80,9 +78,7 @@ public class DraftCardManager : MonoBehaviour
             Card draftCard = cardPool[randomNumber];
             isUnique = CheckDraftCardUniqueness(draftCard);
             if (isUnique)
-            {
                 draftableCards.Add(draftCard);
-            }
         }
     }
 
