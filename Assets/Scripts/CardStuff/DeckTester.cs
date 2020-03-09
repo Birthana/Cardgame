@@ -12,7 +12,6 @@ public class DeckTester : MonoBehaviour
 
     /// Adds each of the specified cards <c>int</c> number of times.
     public List<CardCreateSpec> deckContents = new List<CardCreateSpec>();
-    public int draw = 5;
 
     void Start()
     {
@@ -24,7 +23,6 @@ public class DeckTester : MonoBehaviour
                 deck.Add(Instantiate(request.card));
             }
         }
-        deck.Reset();
-        deck.Draw(draw);
+        BattleManager.instance.NewBattle();
     }
 }

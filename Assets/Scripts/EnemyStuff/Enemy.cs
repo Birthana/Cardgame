@@ -6,11 +6,11 @@ public class Enemy : FieldEntity
     public EnemyAttack[] enemyAttacks;
 
     void OnEnable() {
-        EnemyManager.instance.Add(this);
+        BattleManager.instance.AddEnemy(this);
     }
 
     void OnDisable() {
-        EnemyManager.instance.Remove(this);
+        BattleManager.instance.AddEnemy(this);
     }
 
     public void Attack()

@@ -26,14 +26,16 @@ public class HandAvatar : MonoBehaviour
 
     void OnEnable()
     {
-        Deck.instance.OnDraw += MakeCardAvatar;
-        Deck.instance.OnDiscard += RemoveCardAvatar;
+        BattleManager.instance.OnReset += Reset;
+        BattleManager.instance.OnDraw += MakeCardAvatar;
+        BattleManager.instance.OnDiscard += RemoveCardAvatar;
     }
 
     void OnDisable()
     {
-        Deck.instance.OnDraw -= MakeCardAvatar;
-        Deck.instance.OnDiscard -= RemoveCardAvatar;
+        BattleManager.instance.OnReset -= Reset;
+        BattleManager.instance.OnDraw -= MakeCardAvatar;
+        BattleManager.instance.OnDiscard -= RemoveCardAvatar;
     }
 
     void Update()
@@ -83,7 +85,7 @@ public class HandAvatar : MonoBehaviour
         if (selectionMode == Card.TargetMode.AllEnemies)
         {
             // Cast all the enemies to generic FieldEntitys.
-            card.Play(EnemyManager.instance.enemies.ConvertAll(enemy => (FieldEntity)enemy));
+            card.Play(BattleManager.instance.enemies.ConvertAll(enemy => (FieldEntity)enemy));
             success = true;
         }
         else if (selectionMode == Card.TargetMode.Player)
@@ -106,9 +108,18 @@ public class HandAvatar : MonoBehaviour
 
         if (success)
         {
-            Deck.instance.Discard(card);
+            BattleManager.instance.DiscardCard(card);
         }
         return success;
+    }
+
+    private void Reset() {
+        foreach (CardAvatar avatar in cardAvatars) {
+            Destroy(avatar.gameObject);
+        }
+        cards.Clear();
+        cardAvatars.Clear();
+        (emphasized, waitingToBeEmphasized, selected) = (null, null, null);
     }
 
     // Creates a new avatar to be the visual representation of the given card.
