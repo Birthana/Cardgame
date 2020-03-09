@@ -14,10 +14,14 @@ public class Player : FieldEntity
     public static Player instance { get => _instance; }
     public int energy { get => _energy; }
 
-    void OnEnable() {
-        if (_instance == null) {
+    void OnEnable()
+    {
+        if (_instance == null)
+        {
             _instance = this;
-        } else {
+        }
+        else
+        {
             Debug.LogError("More than one object was instantiated with the Player behavior!");
             Destroy(this);
         }
@@ -25,19 +29,23 @@ public class Player : FieldEntity
         OnEnergyChange?.Invoke();
     }
 
-    void OnDisable() {
+    void OnDisable()
+    {
         _instance = null;
     }
 
-    public void SpendEnergy(int amount) {
-        if (amount > _energy) {
+    public void SpendEnergy(int amount)
+    {
+        if (amount > _energy)
+        {
             Debug.LogError("More energy was spent than we currently have!");
         }
         _energy -= amount;
         OnEnergyChange?.Invoke();
     }
 
-    public override void StartTurn() {
+    public override void StartTurn()
+    {
         base.StartTurn();
         _energy = maxEnergy;
         OnEnergyChange?.Invoke();

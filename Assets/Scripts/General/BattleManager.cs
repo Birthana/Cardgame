@@ -84,8 +84,10 @@ public class BattleManager
     /// <summary>
     /// Draws <c>quantity</c> cards, triggering OnDraw after each card is drawn.
     /// </summary>
-    public void DrawCards(int quantity) {
-        for (int card = 0; card < quantity; card++) {
+    public void DrawCards(int quantity)
+    {
+        for (int card = 0; card < quantity; card++)
+        {
             DrawCard();
         }
     }
@@ -96,7 +98,8 @@ public class BattleManager
     /// </summary>
     public void DiscardCard(Card card)
     {
-        if (!hand.Remove(card)) {
+        if (!hand.Remove(card))
+        {
             Debug.LogError("A card was Discard()ed without being in the current hand:", card);
         }
         discardPile.Add(card);
@@ -107,7 +110,8 @@ public class BattleManager
     /// Performs everything necessary to start a new battle. The draw pile will be set to the
     /// contents of the deck. Five cards will be drawn from the pile.
     /// </summary>
-    public void NewBattle() {
+    public void NewBattle()
+    {
         OnReset.Invoke();
         drawPile = new List<Card>(Deck.instance.GetCards());
         ShuffleDraw();

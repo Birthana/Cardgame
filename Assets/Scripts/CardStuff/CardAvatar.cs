@@ -11,16 +11,22 @@ public class CardAvatar : MonoBehaviour
     private Card _displaying;
     private bool ready = false, updatePending = false;
 
-    public Card displaying {
-        set {
+    public Card displaying
+    {
+        set
+        {
             _displaying = value;
-            if (ready) {
+            if (ready)
+            {
                 DisplayCard();
-            } else {
+            }
+            else
+            {
                 updatePending = true;
             }
         }
-        get {
+        get
+        {
             return _displaying;
         }
     }
@@ -28,23 +34,27 @@ public class CardAvatar : MonoBehaviour
     void Start()
     {
         ready = true;
-        if (updatePending) {
+        if (updatePending)
+        {
             DisplayCard();
             updatePending = false;
         }
     }
 
-    private void DisplayCard() {
+    private void DisplayCard()
+    {
         nameText.text = _displaying.cardName;
         effectText.text = _displaying.cardEffectText;
         levelText.text = _displaying.level.ToString();
     }
 
-    void OnMouseEnter() {
+    void OnMouseEnter()
+    {
         OnHover?.Invoke(this);
     }
 
-    void OnMouseExit() {
+    void OnMouseExit()
+    {
         OnBlur?.Invoke(this);
     }
 }

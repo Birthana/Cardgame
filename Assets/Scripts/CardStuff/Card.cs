@@ -2,10 +2,11 @@
 using UnityEngine;
 using UnityEditor;
 
-[CreateAssetMenu(menuName="Card Game Stuff/Card", fileName="New Card")]
+[CreateAssetMenu(menuName = "Card Game Stuff/Card", fileName = "New Card")]
 public class Card : ScriptableObject
 {
-    public enum TargetMode {
+    public enum TargetMode
+    {
         Player,
         AllEnemies,
         SpecificEnemy,
@@ -18,15 +19,18 @@ public class Card : ScriptableObject
     public CardEffect[] effects;
 
     // Applies all effects of the card, in order.
-    public void Play(List<FieldEntity> targets) {
+    public void Play(List<FieldEntity> targets)
+    {
         ActionContext context = new ActionContext(targets);
-        foreach (CardEffect effect in effects) {
+        foreach (CardEffect effect in effects)
+        {
             effect.ApplyEffect(context);
         }
     }
 
     // Plays the card against a single target instead of a list.
-    public void Play(FieldEntity target) {
+    public void Play(FieldEntity target)
+    {
         Play(new List<FieldEntity>(new FieldEntity[] { target }));
     }
 }

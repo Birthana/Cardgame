@@ -17,7 +17,7 @@ public class TMPStatIndicator : MonoBehaviour
 
     private void UpdateHealthText()
     {
-        displayOn.text = "" + (useStatsFrom.health + useStatsFrom.block) 
+        displayOn.text = "" + (useStatsFrom.health + useStatsFrom.block)
             + " / " + useStatsFrom.maxHealth;
     }
 }

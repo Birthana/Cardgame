@@ -10,11 +10,13 @@ public class ActionContext
     private List<FieldEntity> _targets;
     public List<FieldEntity> targets { get => _targets; }
 
-    public ActionContext(List<FieldEntity> targets) {
+    public ActionContext(List<FieldEntity> targets)
+    {
         _targets = targets;
     }
 
-    public int ComputeDamage(int baseAmount) {
+    public int ComputeDamage(int baseAmount)
+    {
         baseAmount = Math.Max(baseAmount + damageBoost, 0);
         return Mathf.FloorToInt(baseAmount * damageMultiplier);
     }

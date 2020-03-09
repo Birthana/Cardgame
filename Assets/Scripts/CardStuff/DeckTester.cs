@@ -5,7 +5,8 @@ using UnityEngine;
 public class DeckTester : MonoBehaviour
 {
     [System.Serializable]
-    public class CardCreateSpec {
+    public class CardCreateSpec
+    {
         public Card card;
         public int quantity;
     }

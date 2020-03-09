@@ -97,9 +97,11 @@ public class HandAvatar : MonoBehaviour
         {
             var mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit2D mouseHit = Physics2D.Raycast(mouseRay.origin, Vector2.zero);
-            if (mouseHit) {
+            if (mouseHit)
+            {
                 Enemy possibleEnemy = mouseHit.collider.gameObject.GetComponent<Enemy>();
-                if (possibleEnemy) {
+                if (possibleEnemy)
+                {
                     card.Play(possibleEnemy);
                     success = true;
                 }
@@ -113,8 +115,10 @@ public class HandAvatar : MonoBehaviour
         return success;
     }
 
-    private void Reset() {
-        foreach (CardAvatar avatar in cardAvatars) {
+    private void Reset()
+    {
+        foreach (CardAvatar avatar in cardAvatars)
+        {
             Destroy(avatar.gameObject);
         }
         cards.Clear();
@@ -178,13 +182,16 @@ public class HandAvatar : MonoBehaviour
 
     // Select a card as about to be played. In this state, if the user clicks on a valid target,
     // the selected card will be played.
-    private void Select(CardAvatar avatar) {
+    private void Select(CardAvatar avatar)
+    {
         selected = avatar;
     }
 
     // Deselects the given card, if it is currently selected.
-    private void Deselect(CardAvatar avatar) {
-        if (selected == avatar) {
+    private void Deselect(CardAvatar avatar)
+    {
+        if (selected == avatar)
+        {
             selected = null;
         }
         // This helps mute a minor visual hiccup.

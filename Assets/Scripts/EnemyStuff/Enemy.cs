@@ -1,15 +1,17 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class Enemy : FieldEntity 
+public class Enemy : FieldEntity
 {
     public EnemyAttack[] enemyAttacks;
 
-    void OnEnable() {
+    void OnEnable()
+    {
         BattleManager.instance.AddEnemy(this);
     }
 
-    void OnDisable() {
+    void OnDisable()
+    {
         BattleManager.instance.AddEnemy(this);
     }
 
