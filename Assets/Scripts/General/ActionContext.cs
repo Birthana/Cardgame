@@ -10,6 +10,11 @@ public class ActionContext
     private List<FieldEntity> _targets;
     public List<FieldEntity> targets { get => _targets; }
 
+    public ActionContext(FieldEntity target) 
+    {
+        _targets = new List<FieldEntity>(new FieldEntity[] { target });
+    }
+
     public ActionContext(List<FieldEntity> targets)
     {
         _targets = targets;

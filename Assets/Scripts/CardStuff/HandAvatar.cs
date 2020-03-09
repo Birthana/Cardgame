@@ -110,6 +110,7 @@ public class HandAvatar : MonoBehaviour
 
         if (success)
         {
+            BattleManager.instance.SpendEnergy(card.level);
             BattleManager.instance.DiscardCard(card);
         }
         return success;
@@ -184,7 +185,13 @@ public class HandAvatar : MonoBehaviour
     // the selected card will be played.
     private void Select(CardAvatar avatar)
     {
-        selected = avatar;
+        int index = cardAvatars.IndexOf(avatar);
+        int energyRequired = cards[index].level;
+        if (BattleManager.instance.energy >= energyRequired) {
+            selected = avatar;
+        } else {
+            Debug.Log("TODO: Tell the player they don't have enough energy to play the card.");
+        }
     }
 
     // Deselects the given card, if it is currently selected.

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: Slash
   level: 2
-  cardEffectText: Deals 5 DAMAGE to every enemy.
+  cardEffectText: Deals 5 DAMAGE to EVERY enemy.
   target: 1
   effects:
   - {fileID: 11400000, guid: fe3868125ee438f198dba69beab6c1c4, type: 2}

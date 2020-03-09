@@ -5,18 +5,22 @@ using TMPro;
 
 public class TMPEnergyIndicator : MonoBehaviour
 {
-    public Player useEnergyFrom;
     public TextMeshPro displayOn;
 
-    // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
-        useEnergyFrom.OnEnergyChange += UpdateEnergyText;
+        BattleManager.instance.OnEnergyChange += UpdateEnergyText;
         UpdateEnergyText();
+    }
+
+    void OnDisable()
+    {
+        BattleManager.instance.OnEnergyChange -= UpdateEnergyText;
     }
 
     private void UpdateEnergyText()
     {
-        displayOn.text = "" + useEnergyFrom.energy + " / " + useEnergyFrom.maxEnergy;
+        if (!Player.instance) return;
+        displayOn.text = "" + BattleManager.instance.energy + " / " + Player.instance.maxEnergy;
     }
 }

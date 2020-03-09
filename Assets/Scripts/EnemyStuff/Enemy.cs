@@ -1,10 +1,8 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class Enemy : FieldEntity
+public abstract class Enemy : FieldEntity
 {
-    public EnemyAttack[] enemyAttacks;
-
     void OnEnable()
     {
         BattleManager.instance.AddEnemy(this);
@@ -12,11 +10,8 @@ public class Enemy : FieldEntity
 
     void OnDisable()
     {
-        BattleManager.instance.AddEnemy(this);
+        BattleManager.instance.RemoveEnemy(this);
     }
 
-    public void Attack()
-    {
-        enemyAttacks[Random.Range(0, enemyAttacks.Length)].Attack();
-    }
+    public abstract void DoAttack(ActionContext context);
 }

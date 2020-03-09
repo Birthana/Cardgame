@@ -22,11 +22,14 @@ public class BattleManager
     private List<Card> drawPile = new List<Card>();
     private List<Card> hand = new List<Card>();
     private List<Card> discardPile = new List<Card>();
+    private int _energy = 0;
+    public int energy { get => _energy; }
 
     public event Action OnReset;
     public event Action<Card> OnDraw;
     public event Action<Card> OnDiscard;
     public event Action OnShuffle;
+    public event Action OnEnergyChange;
 
     // TODO: Enemy attacks.
 
@@ -106,6 +109,42 @@ public class BattleManager
         OnDiscard?.Invoke(card);
     }
 
+    public void SpendEnergy(int amount)
+    {
+        if (amount > _energy)
+        {
+            Debug.LogError("More energy was spent than we currently have!");
+        }
+        _energy -= amount;
+        OnEnergyChange?.Invoke();
+    }
+
+    public void EndTurn()
+    {
+        // We have to iterate manually here because every time we call Discard(), an item will
+        // be removed from the list which would make a foreach loop choke.
+        for (int index = hand.Count; index > 0; index--) {
+            DiscardCard(hand[index - 1]);
+        }
+
+        foreach (Enemy enemy in enemies) {
+            enemy.ClearBlock();
+        }
+
+        Player player = Player.instance;
+        foreach (Enemy enemy in enemies) {
+            // New context for each enemy because each enemy might have its own set of status 
+            // effects.
+            ActionContext context = new ActionContext(player);
+            enemy.DoAttack(context);
+        }
+
+        player.ClearBlock();
+        _energy = player.maxEnergy;
+        OnEnergyChange?.Invoke();
+        DrawCards(5);
+    }
+
     /// <summary>
     /// Performs everything necessary to start a new battle. The draw pile will be set to the
     /// contents of the deck. Five cards will be drawn from the pile.
@@ -117,6 +156,9 @@ public class BattleManager
         ShuffleDraw();
         hand.Clear();
         discardPile.Clear();
+
+        _energy = Player.instance.maxEnergy;
+        OnEnergyChange?.Invoke();
         DrawCards(5);
     }
 }

@@ -49,6 +49,11 @@ public class FieldEntity : MonoBehaviour
         OnStatsChanged?.Invoke();
     }
 
+    public void ClearBlock() {
+        _block = 0;
+        OnStatsChanged?.Invoke();
+    }
+
     public virtual void StartTurn()
     {
         _block = 0;
