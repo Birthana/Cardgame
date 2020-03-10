@@ -2,14 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// The on-screen representation of the cards currently in the player's hands.
 public class HandAvatar : MonoBehaviour
 {
+    [Tooltip("A prefab with a CardAvatar component to be used to represent all cards in the hand.")]
     public CardAvatar cardAvatarPrefab;
     public LineRenderer linePrefab;
+    [Tooltip("Approximate width and height of cardAvatarPrefab.")]
     public float CARD_WIDTH, CARD_HEIGHT;
+    [Tooltip("Radius of the circule to lay out cards with.")]
     public float CARD_SPACING = 400.0f;
+    [Tooltip("Number of degrees to separate each card by.")]
     public float CARD_ROTATION = 3.0f;
+    [Tooltip("How much to scale up a card by when the player is hovering over it.")]
     public float EMPHASIZED_SCALE = 1.8f;
+    [Tooltip("How much to scale up a card by when the player has selected it and is about to play it.")]
     public float SELECTED_SCALE = 2.1f;
 
     private List<Card> cards = new List<Card>();
@@ -73,9 +80,9 @@ public class HandAvatar : MonoBehaviour
         }
     }
 
-    // Tries to play the currently selected card. If the currently selected card could not be
-    // played (usually because it requries selecting an enemy but no enemy was under the mouse)
-    // then false will be returned and the card's effects will not be played.
+    /// Tries to play the currently selected card. If the currently selected card could not be
+    /// played (usually because it requries selecting an enemy but no enemy was under the mouse)
+    /// then false will be returned and the card's effects will not be played.
     private bool TryPlay()
     {
         int cardIndex = cardAvatars.IndexOf(selected);
@@ -116,6 +123,8 @@ public class HandAvatar : MonoBehaviour
         return success;
     }
 
+    /// Clears out all existing card avatars and resets all helper variables. Effectively makes
+    /// the hand render as if it is empty.
     private void Reset()
     {
         foreach (CardAvatar avatar in cardAvatars)
@@ -127,7 +136,7 @@ public class HandAvatar : MonoBehaviour
         (emphasized, waitingToBeEmphasized, selected) = (null, null, null);
     }
 
-    // Creates a new avatar to be the visual representation of the given card.
+    /// Creates a new avatar to be the visual representation of the given card.
     private void MakeCardAvatar(Card forCard)
     {
         CardAvatar avatar = Instantiate(cardAvatarPrefab, this.transform);
@@ -139,7 +148,7 @@ public class HandAvatar : MonoBehaviour
         UpdateAvatarTransforms();
     }
 
-    // Removes the visual representation of the given card.
+    /// Removes the visual representation of the given card.
     private void RemoveCardAvatar(Card forCard)
     {
         int index = cards.IndexOf(forCard);
@@ -153,7 +162,7 @@ public class HandAvatar : MonoBehaviour
         UpdateAvatarTransforms();
     }
 
-    // Emphasizes a card to make it show up bigger.
+    /// Emphasizes a card to make it show up bigger.
     private void Emphasize(CardAvatar avatar)
     {
         if (emphasized == null)
@@ -167,7 +176,7 @@ public class HandAvatar : MonoBehaviour
         }
     }
 
-    // Deemphasizes a card to return it to its normal size.
+    /// Deemphasizes a card to return it to its normal size.
     private void Deemphasize(CardAvatar avatar)
     {
         if (avatar == emphasized)
@@ -181,8 +190,8 @@ public class HandAvatar : MonoBehaviour
         }
     }
 
-    // Select a card as about to be played. In this state, if the user clicks on a valid target,
-    // the selected card will be played.
+    /// Select a card as about to be played. In this state, if the user clicks on a valid target,
+    /// the selected card will be played.
     private void Select(CardAvatar avatar)
     {
         int index = cardAvatars.IndexOf(avatar);
@@ -194,7 +203,7 @@ public class HandAvatar : MonoBehaviour
         }
     }
 
-    // Deselects the given card, if it is currently selected.
+    /// Deselects the given card, if it is currently selected.
     private void Deselect(CardAvatar avatar)
     {
         if (selected == avatar)
@@ -205,8 +214,8 @@ public class HandAvatar : MonoBehaviour
         Deemphasize(avatar);
     }
 
-    // Reposition all the card avatars, taking into account their number as well as which one
-    // is emphasized or selected (if any.)
+    /// Reposition all the card avatars, taking into account their number as well as which one
+    /// is emphasized or selected (if any.)
     private void UpdateAvatarTransforms()
     {
         int emphasizedIndex = cardAvatars.IndexOf(emphasized);
@@ -281,7 +290,7 @@ public class HandAvatar : MonoBehaviour
         }
     }
 
-    // Draw an in-editor gizmo representing the position a card may occupy.
+    /// Draw an in-editor gizmo representing the position a card may occupy.
     private void DrawGizmoCard(Vector3 center, float angle)
     {
         // half of width, height
@@ -299,8 +308,8 @@ public class HandAvatar : MonoBehaviour
         Gizmos.DrawLine(bl, tl);
     }
 
-    // Draw an in-editor gizmo showing a possible layout of five cards given the parameters entered
-    // into the inspector.
+    /// Draw an in-editor gizmo showing a possible layout of five cards given the parameters entered
+    /// into the inspector.
     private void DrawGizmosImpl()
     {
         for (float offset = -2.0f; offset <= 2.0f; offset += 1.0f)

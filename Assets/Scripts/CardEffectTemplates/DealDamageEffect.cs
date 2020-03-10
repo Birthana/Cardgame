@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// An effect which damages all targets by a certain amount when it is played.
 [CreateAssetMenu(menuName = "Card Game Stuff/Effects/Deal Damage", fileName = "DealDamage")]
 public class DealDamageEffect : CardEffect
 {
@@ -11,7 +12,7 @@ public class DealDamageEffect : CardEffect
     {
         foreach (FieldEntity target in context.targets)
         {
-            target.TakeDamage(amount);
+            target.TakeDamage(context.ComputeDamage(amount));
         }
     }
 }

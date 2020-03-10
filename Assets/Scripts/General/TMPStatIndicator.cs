@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+/// A script to represent stats (health / block) using a TextMeshPro object.
 public class TMPStatIndicator : MonoBehaviour
 {
     public FieldEntity useStatsFrom;

@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEditor;
 
+/// Represents a single in-game card.
 [CreateAssetMenu(menuName = "Card Game Stuff/Card", fileName = "New Card")]
 public class Card : ScriptableObject
 {
@@ -12,13 +13,18 @@ public class Card : ScriptableObject
         SpecificEnemy,
     }
 
+    [Tooltip("The name that will appear at the top of the card.")]
     public string cardName = "New Card";
+    [Tooltip("How much energy the card costs to play.")]
     public int level = 1;
+    [Tooltip("The text that will be shown in the body (bottom half) of the card.")]
     public string cardEffectText = "Does nothing.";
+    [Tooltip("How the player should select targets for this card.")]
     public TargetMode target = TargetMode.SpecificEnemy;
+    [Tooltip("The effects this card will have when played. Effects are triggered in the order specified here.")]
     public CardEffect[] effects;
 
-    // Applies all effects of the card, in order.
+    /// Applies all effects of the card, in order.
     public void Play(List<FieldEntity> targets)
     {
         ActionContext context = new ActionContext(targets);
@@ -28,7 +34,7 @@ public class Card : ScriptableObject
         }
     }
 
-    // Plays the card against a single target instead of a list.
+    /// Plays the card against a single target instead of a list.
     public void Play(FieldEntity target)
     {
         Play(new List<FieldEntity>(new FieldEntity[] { target }));

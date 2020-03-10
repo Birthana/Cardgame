@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// This represents anything that participates in battle. It is the base class for both Player
+/// and Enemy.
 public class FieldEntity : MonoBehaviour
 {
     public int maxHealth;
@@ -10,7 +12,9 @@ public class FieldEntity : MonoBehaviour
     public int block { get => _block; }
     public bool dead { get => health == 0; }
 
+    /// Invoked whenever health or block is changed.
     public event Action OnStatsChanged;
+    /// Invoked when health reaches zero.
     public event Action OnDeath;
 
     private int _health;
@@ -22,6 +26,7 @@ public class FieldEntity : MonoBehaviour
         OnStatsChanged?.Invoke();
     }
 
+    /// Applies the given amount of damage. 
     public void TakeDamage(int damage)
     {
         if (block >= damage)

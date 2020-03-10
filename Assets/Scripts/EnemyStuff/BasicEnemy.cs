@@ -7,6 +7,7 @@ public class BasicEnemy : Enemy
 
     public override void DoAttack(ActionContext context)
     {
+        // Simply deal [strenth] damage to the target.
         context.targets[0].TakeDamage(strength);
     }
 }

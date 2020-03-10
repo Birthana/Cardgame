@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// Convenience class for loading the deck with a preset set of cards and then
+/// starting a new battle.
 public class DeckTester : MonoBehaviour
 {
     [System.Serializable]
     public class CardCreateSpec
     {
+        [Tooltip("The card to add to the deck.")]
         public Card card;
+        [Tooltip("Number of times to add the card to the deck.")]
         public int quantity;
     }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+/// Represents the player's remaining energy with text on a TextMeshPro object.
 public class TMPEnergyIndicator : MonoBehaviour
 {
     public TextMeshPro displayOn;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// An effect which increases the block of all targets when played.
 [CreateAssetMenu(menuName = "Card Game Stuff/Effects/Increase Block", fileName = "IncreaseBlock")]
 public class IncreaseBlockEffect : CardEffect
 {

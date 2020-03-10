@@ -3,9 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// Manages everything that happens during a battle: keeping track of enemies, keeping track of 
+/// the player's draw, hand, and discard piles, and keeping track of the player's energy.
 public class BattleManager
 {
     private static BattleManager _instance = null;
+    /// The single, global instance of BattleManager.
     public static BattleManager instance
     {
         get
@@ -18,26 +21,33 @@ public class BattleManager
         }
     }
     private List<Enemy> _enemies = new List<Enemy>();
+    /// A list of all enemies currently in the battle.
     public List<Enemy> enemies { get => _enemies; }
     private List<Card> drawPile = new List<Card>();
     private List<Card> hand = new List<Card>();
     private List<Card> discardPile = new List<Card>();
     private int _energy = 0;
+    /// How much energy the current player has.
     public int energy { get => _energy; }
 
+    /// Invoked when the entire battle is reset to start a new battle.
     public event Action OnReset;
+    /// Invoked when a new card is drawn.
     public event Action<Card> OnDraw;
+    /// Invoked when a card is discarded.
     public event Action<Card> OnDiscard;
+    /// Invoked when the draw pile is shuffled.
     public event Action OnShuffle;
+    /// Invoked when the amount of energy the player has is changed.
     public event Action OnEnergyChange;
 
-    // TODO: Enemy attacks.
-
+    /// Adds an enemy to the battle. This method is automatically called by Enemy.
     public void AddEnemy(Enemy enemy)
     {
         _enemies.Add(enemy);
     }
 
+    /// Removes an enemy from the battle. This method is automatically called by Enemy.
     public void RemoveEnemy(Enemy enemy)
     {
         _enemies.Remove(enemy);
@@ -61,6 +71,7 @@ public class BattleManager
         }
     }
 
+    /// Shuffles the draw pile and invokes OnShuffle
     private void ShuffleDraw()
     {
         for (int index = 0; index < drawPile.Count; index++)
@@ -71,6 +82,7 @@ public class BattleManager
         OnShuffle?.Invoke();
     }
 
+    /// Moves the top card of the draw pile to the player's hand. Invokes OnDraw.
     public void DrawCard()
     {
         if (drawPile.Count == 0)
@@ -84,9 +96,7 @@ public class BattleManager
         OnDraw?.Invoke(drawn);
     }
 
-    /// <summary>
     /// Draws <c>quantity</c> cards, triggering OnDraw after each card is drawn.
-    /// </summary>
     public void DrawCards(int quantity)
     {
         for (int card = 0; card < quantity; card++)
@@ -95,10 +105,8 @@ public class BattleManager
         }
     }
 
-    /// <summary>
     /// Adds a card to the discard pile. If the card was in the hand, removes that card from the
     /// hand. If not, an error is written to the console, but no exception is thrown.
-    /// </summary>
     public void DiscardCard(Card card)
     {
         if (!hand.Remove(card))
@@ -109,6 +117,8 @@ public class BattleManager
         OnDiscard?.Invoke(card);
     }
 
+    /// Subtracts the given amount of energy. If this results in energy being negative, an error
+    /// is written to the console but no exception is thrown.
     public void SpendEnergy(int amount)
     {
         if (amount > _energy)
@@ -119,6 +129,12 @@ public class BattleManager
         OnEnergyChange?.Invoke();
     }
 
+    /// Does all the necessary stuff to end the player's turn:
+    /// 1. Moves all cards in the hand to the discard pile, invoking OnDiscard every time.
+    /// 2. Removes block from all enemies.
+    /// 3. Enemies perform their intended attacks or actions.
+    /// 4. A new hand is drawn. (OnDraw is invoked for every card drawn.)
+    /// 5. Player's energy is restored.
     public void EndTurn()
     {
         // We have to iterate manually here because every time we call Discard(), an item will
@@ -145,10 +161,8 @@ public class BattleManager
         DrawCards(5);
     }
 
-    /// <summary>
     /// Performs everything necessary to start a new battle. The draw pile will be set to the
-    /// contents of the deck. Five cards will be drawn from the pile.
-    /// </summary>
+    /// contents of the deck. Five cards will be drawn from the pile, invoking OnDraw each time.
     public void NewBattle()
     {
         OnReset.Invoke();
