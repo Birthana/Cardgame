@@ -45,6 +45,7 @@ public class BattleManager
     public void AddEnemy(Enemy enemy)
     {
         _enemies.Add(enemy);
+        enemy.UpdateActionIndicatorWrapper();
     }
 
     /// Removes an enemy from the battle. This method is automatically called by Enemy.
@@ -147,14 +148,15 @@ public class BattleManager
             enemy.ClearBlock();
         }
 
-        Player player = Player.instance;
         foreach (Enemy enemy in enemies) {
-            // New context for each enemy because each enemy might have its own set of status 
-            // effects.
-            ActionContext context = new ActionContext(player);
-            enemy.DoAttack(context);
+            enemy.DoAttackWrapper();
         }
 
+        foreach (Enemy enemy in enemies) {
+            enemy.UpdateActionIndicatorWrapper();
+        }
+
+        Player player = Player.instance;
         player.ClearBlock();
         _energy = player.maxEnergy;
         OnEnergyChange?.Invoke();

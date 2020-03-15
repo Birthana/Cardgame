@@ -4,6 +4,8 @@ using UnityEngine;
 /// Represents an enemy on the battlefield.
 public abstract class Enemy : FieldEntity
 {
+    public ActionIndicator actionIndicator;
+
     void OnEnable()
     {
         BattleManager.instance.AddEnemy(this);
@@ -14,6 +16,26 @@ public abstract class Enemy : FieldEntity
         BattleManager.instance.RemoveEnemy(this);
     }
 
+    private ActionContext CreateActionContext() {
+        Player player = Player.instance;
+        return new ActionContext(player);
+    }
+
+    public void UpdateActionIndicatorWrapper()
+    {
+        UpdateActionIndicator(actionIndicator, CreateActionContext());
+    }
+
+    /// This method should update the given ActionIndicator to show the action this enemy intends
+    /// to take when DoAttack is called.
+    protected abstract void UpdateActionIndicator(ActionIndicator indicator, ActionContext context);
+
+    public void DoAttackWrapper() {
+        actionIndicator.Hide();
+        UpdateActionIndicator(actionIndicator, CreateActionContext());
+        DoAttack(CreateActionContext());
+    }
+
     /// This method is called whenever it is this enemy's turn to attack.
-    public abstract void DoAttack(ActionContext context);
+    protected abstract void DoAttack(ActionContext context);
 }
