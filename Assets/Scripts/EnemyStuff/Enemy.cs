@@ -30,12 +30,12 @@ public abstract class Enemy : FieldEntity
     /// to take when DoAttack is called.
     protected abstract void UpdateActionIndicator(ActionIndicator indicator, ActionContext context);
 
-    public void DoAttackWrapper() {
+    public ActionTargetAnimation DoAttackWrapper() {
         actionIndicator.Hide();
         UpdateActionIndicator(actionIndicator, CreateActionContext());
-        DoAttack(CreateActionContext());
+        return DoAttack(CreateActionContext());
     }
 
     /// This method is called whenever it is this enemy's turn to attack.
-    protected abstract void DoAttack(ActionContext context);
+    protected abstract ActionTargetAnimation DoAttack(ActionContext context);
 }

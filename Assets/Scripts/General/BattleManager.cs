@@ -7,6 +7,13 @@ using UnityEngine;
 /// the player's draw, hand, and discard piles, and keeping track of the player's energy.
 public class BattleManager
 {
+    private enum State
+    {
+        PLAYER_TURN,
+        PLAYER_CARD_ANIMATION,
+        ENEMY_ATTACK_ANIMATION,
+    }
+
     private static BattleManager _instance = null;
     /// The single, global instance of BattleManager.
     public static BattleManager instance
@@ -16,6 +23,7 @@ public class BattleManager
             if (_instance == null)
             {
                 _instance = new BattleManager();
+                UpdateCaller.instance.updateCallback += _instance.FakeUpdate;
             }
             return _instance;
         }
@@ -29,6 +37,13 @@ public class BattleManager
     private int _energy = 0;
     /// How much energy the current player has.
     public int energy { get => _energy; }
+
+    private State state;
+    // Used for animating card effects.
+    private List<CardEffect> pendingEffects = new List<CardEffect>();
+    // Used for animating enemy attacks.
+    private List<Enemy> pendingAttacks = new List<Enemy>();
+    private List<ActionTargetAnimation> currentAnimations = new List<ActionTargetAnimation>();
 
     /// Invoked when the entire battle is reset to start a new battle.
     public event Action OnReset;
@@ -138,21 +153,39 @@ public class BattleManager
     /// 5. Player's energy is restored.
     public void EndTurn()
     {
+        if (state != State.PLAYER_TURN)
+        {
+            // This can also be triggered if a player animation is playing.
+            Debug.LogWarning("Tried to end the turn while it wasn't the player's turn.");
+            return;
+        }
         // We have to iterate manually here because every time we call Discard(), an item will
         // be removed from the list which would make a foreach loop choke.
-        for (int index = hand.Count; index > 0; index--) {
+        // TODO: Animation.
+        for (int index = hand.Count; index > 0; index--)
+        {
             DiscardCard(hand[index - 1]);
         }
 
-        foreach (Enemy enemy in enemies) {
+        foreach (Enemy enemy in enemies)
+        {
             enemy.ClearBlock();
         }
 
-        foreach (Enemy enemy in enemies) {
-            enemy.DoAttackWrapper();
+        pendingAttacks.Clear();
+        foreach (Enemy enemy in enemies)
+        {
+            pendingAttacks.Add(enemy);
+            // enemy.DoAttackWrapper();
         }
 
-        foreach (Enemy enemy in enemies) {
+        state = State.ENEMY_ATTACK_ANIMATION;
+    }
+
+    private void TransitionEnemyTurnToPlayerTurn()
+    {
+        foreach (Enemy enemy in enemies)
+        {
             enemy.UpdateActionIndicatorWrapper();
         }
 
@@ -160,7 +193,59 @@ public class BattleManager
         player.ClearBlock();
         _energy = player.maxEnergy;
         OnEnergyChange?.Invoke();
+        // TODO: Animation.
         DrawCards(5);
+
+        state = State.PLAYER_TURN;
+    }
+
+    public void FakeUpdate()
+    {
+        if (state == State.PLAYER_TURN)
+        {
+
+        }
+        else if (state == State.PLAYER_CARD_ANIMATION)
+        {
+
+        }
+        else if (state == State.ENEMY_ATTACK_ANIMATION)
+        {
+            var completed = currentAnimations.FindAll(anim => anim.AnimationComplete());
+            foreach (ActionTargetAnimation complete in completed)
+            {
+                complete.UnmountTarget();
+                GameObject.Destroy(complete.gameObject);
+                currentAnimations.Remove(complete);
+            }
+
+            while (currentAnimations.Count == 0 && pendingAttacks.Count > 0)
+            {
+                var animTemplate = pendingAttacks[0].DoAttackWrapper();
+                if (animTemplate != null)
+                {
+                    Player player = Player.instance;
+                    /// This positioning ensures that if the animation does any rotation things that
+                    /// it will rotate around the origin of the prefab instead of some odd off-screen
+                    /// pivot point.
+                    var instantiatedObject = GameObject.Instantiate(
+                        animTemplate.gameObject,
+                        player.transform.position,
+                        player.transform.rotation
+                    );
+                    var instance = instantiatedObject.GetComponent<ActionTargetAnimation>();
+                    instance.MountTarget(player.gameObject);
+                    currentAnimations.Add(instance);
+                }
+                pendingAttacks.RemoveAt(0);
+            }
+
+            if (pendingAttacks.Count == 0 && currentAnimations.Count == 0)
+            {
+                // All the attacks are done, transition back to the player's turn.
+                TransitionEnemyTurnToPlayerTurn();
+            }
+        }
     }
 
     /// Performs everything necessary to start a new battle. The draw pile will be set to the
