@@ -8,11 +8,12 @@ public class IncreaseBlockEffect : CardEffect
 {
     public int amount = 5;
 
-    public override void ApplyEffect(ActionContext context)
+    public override IEnumerator ApplyEffect(ActionContext context)
     {
         foreach (FieldEntity target in context.targets)
         {
             target.AddBlock(amount);
         }
+        yield break;
     }
 }

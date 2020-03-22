@@ -263,11 +263,11 @@ public class HandAvatar : MonoBehaviour
 
             float angle = transformAmount * CARD_ROTATION;
             Vector3 position = new Vector3(
-                Mathf.Sin(angle * Mathf.Deg2Rad),
-                Mathf.Cos(angle * Mathf.Deg2Rad) - 1,
+                Mathf.Sin(angle * Mathf.Deg2Rad) * CARD_SPACING,
+                (Mathf.Cos(angle * Mathf.Deg2Rad) - 1) * CARD_SPACING,
                 // The big card should render on top of everything else.
-                index == bigCardIndex ? 0 : 1
-            ) * CARD_SPACING;
+                index == bigCardIndex ? -2 : -1
+            );
             float scale;
             if (index == bigCardIndex)
             {

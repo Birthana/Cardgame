@@ -7,13 +7,6 @@ using UnityEngine;
 /// the player's draw, hand, and discard piles, and keeping track of the player's energy.
 public class BattleManager
 {
-    private enum State
-    {
-        PLAYER_TURN,
-        PLAYER_CARD_ANIMATION,
-        ENEMY_ATTACK_ANIMATION,
-    }
-
     private static BattleManager _instance = null;
     /// The single, global instance of BattleManager.
     public static BattleManager instance
@@ -23,7 +16,7 @@ public class BattleManager
             if (_instance == null)
             {
                 _instance = new BattleManager();
-                UpdateCaller.instance.updateCallback += _instance.FakeUpdate;
+                UpdateCaller.instance.StartCoroutine(_instance.UpdateLoop());
             }
             return _instance;
         }
@@ -38,13 +31,6 @@ public class BattleManager
     /// How much energy the current player has.
     public int energy { get => _energy; }
 
-    private State state;
-    // Used for animating card effects.
-    private List<CardEffect> pendingEffects = new List<CardEffect>();
-    // Used for animating enemy attacks.
-    private List<Enemy> pendingAttacks = new List<Enemy>();
-    private List<ActionTargetAnimation> currentAnimations = new List<ActionTargetAnimation>();
-
     /// Invoked when the entire battle is reset to start a new battle.
     public event Action OnReset;
     /// Invoked when a new card is drawn.
@@ -55,6 +41,8 @@ public class BattleManager
     public event Action OnShuffle;
     /// Invoked when the amount of energy the player has is changed.
     public event Action OnEnergyChange;
+
+    private bool triggerEndTurn = false;
 
     /// Adds an enemy to the battle. This method is automatically called by Enemy.
     public void AddEnemy(Enemy enemy)
@@ -153,98 +141,47 @@ public class BattleManager
     /// 5. Player's energy is restored.
     public void EndTurn()
     {
-        if (state != State.PLAYER_TURN)
-        {
-            // This can also be triggered if a player animation is playing.
-            Debug.LogWarning("Tried to end the turn while it wasn't the player's turn.");
-            return;
-        }
-        // We have to iterate manually here because every time we call Discard(), an item will
-        // be removed from the list which would make a foreach loop choke.
-        // TODO: Animation.
-        for (int index = hand.Count; index > 0; index--)
-        {
-            DiscardCard(hand[index - 1]);
-        }
-
-        foreach (Enemy enemy in enemies)
-        {
-            enemy.ClearBlock();
-        }
-
-        pendingAttacks.Clear();
-        foreach (Enemy enemy in enemies)
-        {
-            pendingAttacks.Add(enemy);
-            // enemy.DoAttackWrapper();
-        }
-
-        state = State.ENEMY_ATTACK_ANIMATION;
+        triggerEndTurn = true;
     }
 
-    private void TransitionEnemyTurnToPlayerTurn()
+    public IEnumerator UpdateLoop()
     {
-        foreach (Enemy enemy in enemies)
+        while (true)
         {
-            enemy.UpdateActionIndicatorWrapper();
-        }
+            while (!triggerEndTurn) yield return null;
 
-        Player player = Player.instance;
-        player.ClearBlock();
-        _energy = player.maxEnergy;
-        OnEnergyChange?.Invoke();
-        // TODO: Animation.
-        DrawCards(5);
-
-        state = State.PLAYER_TURN;
-    }
-
-    public void FakeUpdate()
-    {
-        if (state == State.PLAYER_TURN)
-        {
-
-        }
-        else if (state == State.PLAYER_CARD_ANIMATION)
-        {
-
-        }
-        else if (state == State.ENEMY_ATTACK_ANIMATION)
-        {
-            var completed = currentAnimations.FindAll(anim => anim.AnimationComplete());
-            foreach (ActionTargetAnimation complete in completed)
+            // We have to iterate manually here because every time we call Discard(), an item will
+            // be removed from the list which would make a foreach loop choke.
+            // TODO: Animation.
+            for (int index = hand.Count; index > 0; index--)
             {
-                complete.UnmountTarget();
-                GameObject.Destroy(complete.gameObject);
-                currentAnimations.Remove(complete);
+                DiscardCard(hand[index - 1]);
             }
 
-            while (currentAnimations.Count == 0 && pendingAttacks.Count > 0)
+            foreach (Enemy enemy in enemies)
             {
-                var animTemplate = pendingAttacks[0].DoAttackWrapper();
-                if (animTemplate != null)
-                {
-                    Player player = Player.instance;
-                    /// This positioning ensures that if the animation does any rotation things that
-                    /// it will rotate around the origin of the prefab instead of some odd off-screen
-                    /// pivot point.
-                    var instantiatedObject = GameObject.Instantiate(
-                        animTemplate.gameObject,
-                        player.transform.position,
-                        player.transform.rotation
-                    );
-                    var instance = instantiatedObject.GetComponent<ActionTargetAnimation>();
-                    instance.MountTarget(player.gameObject);
-                    currentAnimations.Add(instance);
-                }
-                pendingAttacks.RemoveAt(0);
+                enemy.ClearBlock();
             }
 
-            if (pendingAttacks.Count == 0 && currentAnimations.Count == 0)
+            // Do enemy attacks.
+            foreach (Enemy enemy in enemies)
             {
-                // All the attacks are done, transition back to the player's turn.
-                TransitionEnemyTurnToPlayerTurn();
+                // This way, we wait for each enemy to do their thing before moving on.
+                yield return enemy.DoAttackWrapper();
             }
+
+            // Return to player turn.
+            foreach (Enemy enemy in enemies)
+            {
+                enemy.UpdateActionIndicatorWrapper();
+            }
+            Player player = Player.instance;
+            player.ClearBlock();
+            _energy = player.maxEnergy;
+            OnEnergyChange?.Invoke();
+            // TODO: Animation.
+            DrawCards(5);
+            triggerEndTurn = false;
         }
     }
 

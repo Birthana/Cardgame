@@ -8,11 +8,14 @@ public class DealDamageEffect : CardEffect
 {
     public int amount = 5;
 
-    public override void ApplyEffect(ActionContext context)
+    public override IEnumerator ApplyEffect(ActionContext context)
     {
+        Player.instance.TriggerAttackAnim();
         foreach (FieldEntity target in context.targets)
         {
             target.TakeDamage(context.ComputeDamage(amount));
+            target.TriggerDamagedAnim();
         }
+        yield return new WaitForSeconds(0.5f);
     }
 }

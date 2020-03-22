@@ -20,8 +20,13 @@ public class UpdateCaller : MonoBehaviour
 
     public Action updateCallback;
 
+    private void Start()
+    {
+        DontDestroyOnLoad(this.gameObject);
+    }
+
     private void Update()
     {
-        updateCallback();
+        updateCallback?.Invoke();
     }
 }

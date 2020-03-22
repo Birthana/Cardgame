@@ -7,5 +7,5 @@ using UnityEngine;
 /// about what entity(ies) the card is being played on. See ActionContext for more detail.
 public abstract class CardEffect : ScriptableObject
 {
-    public abstract void ApplyEffect(ActionContext context);
+    public abstract IEnumerator ApplyEffect(ActionContext context);
 }

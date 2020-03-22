@@ -7,6 +7,8 @@ using UnityEngine;
 /// and Enemy.
 public class FieldEntity : MonoBehaviour
 {
+    [Tooltip("This should have triggers named Attack and Damaged.")]
+    public Animator animator;
     public int maxHealth;
     public int health { get => Math.Max(_health, 0); }
     public int block { get => _block; }
@@ -54,9 +56,24 @@ public class FieldEntity : MonoBehaviour
         OnStatsChanged?.Invoke();
     }
 
-    public void ClearBlock() {
+    public void ClearBlock()
+    {
         _block = 0;
         OnStatsChanged?.Invoke();
+    }
+
+    /// Sets a trigger named "Damaged" on this field entity's Animator instance. This animation
+    /// should be used when the field entity receives damage.
+    public void TriggerDamagedAnim()
+    {
+        animator.SetTrigger("Damaged");
+    }
+
+    /// Sets a trigger named "Attack" on this field entity's Animator instance. This animation
+    /// should be used when the field entity deals damage.
+    public void TriggerAttackAnim()
+    {
+        animator.SetTrigger("Attack");
     }
 
     public virtual void StartTurn()

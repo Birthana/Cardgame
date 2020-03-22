@@ -93,6 +93,8 @@ GameObject:
   - component: {fileID: 2861136075968848366}
   - component: {fileID: 2861136075968848365}
   - component: {fileID: 6213615893135696157}
+  - component: {fileID: 3361463406171308042}
+  - component: {fileID: 8224568284907960995}
   m_Layer: 0
   m_Name: TestEnemy
   m_TagString: Untagged
@@ -160,6 +162,7 @@ MonoBehaviour:
   strength: 5
   attackAnimation: {fileID: 8846765784876183809, guid: a2ebac5e583d6288dbe02f4550a46896,
     type: 3}
+  animator: {fileID: 8224568284907960995}
 --- !u!114 &6213615893135696157
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -174,6 +177,41 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   useStatsFrom: {fileID: 2861136075968848365}
   displayOn: {fileID: 2861136077421017021}
+--- !u!114 &3361463406171308042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2861136075968848355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 485e582d486532ce8a98432669fd0388, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 8224568284907960995}
+  parameterName: Offset
+  minimumValue: 0
+  maximumValue: 1
+--- !u!95 &8224568284907960995
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2861136075968848355}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 85feb3484ac0570e9a7291619469a7cc, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &2861136077421017011
 GameObject:
   m_ObjectHideFlags: 0
@@ -455,6 +493,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 076503182a30f4ea89a6988fa55f0fa7, type: 3}
+--- !u!4 &3129488564149936469 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8634144001570857297, guid: 076503182a30f4ea89a6988fa55f0fa7,
+    type: 3}
+  m_PrefabInstance: {fileID: 6682367121302650884}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &4666492055715580300 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2053145211233798536, guid: 076503182a30f4ea89a6988fa55f0fa7,
@@ -467,9 +511,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24e08044df63ecb3c9c66a7966884ede, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &3129488564149936469 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8634144001570857297, guid: 076503182a30f4ea89a6988fa55f0fa7,
-    type: 3}
-  m_PrefabInstance: {fileID: 6682367121302650884}
-  m_PrefabAsset: {fileID: 0}
