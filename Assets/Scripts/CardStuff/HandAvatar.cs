@@ -30,6 +30,10 @@ public class HandAvatar : MonoBehaviour
     // clicking on it again or by clicking on another card to select.
     private CardAvatar selected = null;
     private Card.TargetMode selectionMode;
+    // This is set to true when some kind of animation is playing, e.g. when a card is being played
+    // or when a new hand is being dealt. It prevents the player from interacting with any of the 
+    // cards.
+    private bool ignoreInteraction = false;
 
     void OnEnable()
     {
@@ -47,7 +51,7 @@ public class HandAvatar : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !ignoreInteraction)
         {
             // The user clicked the mouse while a card was already selected.
             if (selected != null)
@@ -80,6 +84,16 @@ public class HandAvatar : MonoBehaviour
         }
     }
 
+    /// This sets and unsets ignoreInteraction based on the provided coroutine / iterator, setting
+    /// it before it starts and unsetting it once it ends.
+    private IEnumerator WrapCardAnimation(IEnumerator animCoroutine)
+    {
+        ignoreInteraction = true;
+        yield return animCoroutine;
+        ignoreInteraction = false;
+        yield break;
+    }
+
     /// Tries to play the currently selected card. If the currently selected card could not be
     /// played (usually because it requries selecting an enemy but no enemy was under the mouse)
     /// then false will be returned and the card's effects will not be played.
@@ -92,12 +106,14 @@ public class HandAvatar : MonoBehaviour
         if (selectionMode == Card.TargetMode.AllEnemies)
         {
             // Cast all the enemies to generic FieldEntitys.
-            card.Play(BattleManager.instance.enemies.ConvertAll(enemy => (FieldEntity)enemy));
+            StartCoroutine(WrapCardAnimation(
+                card.Play(BattleManager.instance.enemies.ConvertAll(enemy => (FieldEntity)enemy))
+            ));
             success = true;
         }
         else if (selectionMode == Card.TargetMode.Player)
         {
-            card.Play(Player.instance);
+            StartCoroutine(WrapCardAnimation(card.Play(Player.instance)));
             success = true;
         }
         else if (selectionMode == Card.TargetMode.SpecificEnemy)
@@ -109,7 +125,7 @@ public class HandAvatar : MonoBehaviour
                 Enemy possibleEnemy = mouseHit.collider.gameObject.GetComponent<Enemy>();
                 if (possibleEnemy)
                 {
-                    card.Play(possibleEnemy);
+                    StartCoroutine(WrapCardAnimation(card.Play(possibleEnemy)));
                     success = true;
                 }
             }
@@ -196,9 +212,12 @@ public class HandAvatar : MonoBehaviour
     {
         int index = cardAvatars.IndexOf(avatar);
         int energyRequired = cards[index].level;
-        if (BattleManager.instance.energy >= energyRequired) {
+        if (BattleManager.instance.energy >= energyRequired)
+        {
             selected = avatar;
-        } else {
+        }
+        else
+        {
             Debug.Log("TODO: Tell the player they don't have enough energy to play the card.");
         }
     }
@@ -231,7 +250,7 @@ public class HandAvatar : MonoBehaviour
         for (int index = 0; index < cardAvatars.Count; index++)
         {
             float transformAmount = ((float)index) - ((float)cardAvatars.Count - 1) / 2.0f;
-            if (somethingIsSelected)
+            if (somethingIsSelected && !ignoreInteraction)
             {
                 // Make all the other cards act like the selected card isn't in the hand.
                 if (index < selectedIndex)
@@ -248,7 +267,7 @@ public class HandAvatar : MonoBehaviour
                     transformAmount = 0.0f;
                 }
             }
-            else if (somethingIsEmphasized)
+            else if (somethingIsEmphasized && !ignoreInteraction)
             {
                 // Make all the other cards give the emphasized card a little more space.
                 if (index < emphasizedIndex)
@@ -269,7 +288,7 @@ public class HandAvatar : MonoBehaviour
                 index == bigCardIndex ? -2 : -1
             );
             float scale;
-            if (index == bigCardIndex)
+            if (index == bigCardIndex && !ignoreInteraction)
             {
                 scale = somethingIsSelected ? SELECTED_SCALE : EMPHASIZED_SCALE;
             }
@@ -278,7 +297,7 @@ public class HandAvatar : MonoBehaviour
                 scale = 1;
             }
 
-            if (somethingIsSelected && index != selectedIndex)
+            if (somethingIsSelected && index != selectedIndex && !ignoreInteraction)
             {
                 position.y -= CARD_HEIGHT / 2;
             }

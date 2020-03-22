@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
@@ -25,18 +26,19 @@ public class Card : ScriptableObject
     public CardEffect[] effects;
 
     /// Applies all effects of the card, in order.
-    public void Play(List<FieldEntity> targets)
+    public IEnumerator Play(List<FieldEntity> targets)
     {
         ActionContext context = new ActionContext(targets);
         foreach (CardEffect effect in effects)
         {
-            effect.ApplyEffect(context);
+            yield return effect.ApplyEffect(context);
         }
+        yield break;
     }
 
     /// Plays the card against a single target instead of a list.
-    public void Play(FieldEntity target)
+    public IEnumerator Play(FieldEntity target)
     {
-        Play(new List<FieldEntity>(new FieldEntity[] { target }));
+        return Play(new List<FieldEntity>(new FieldEntity[] { target }));
     }
 }
