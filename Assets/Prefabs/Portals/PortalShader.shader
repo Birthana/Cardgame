@@ -6,6 +6,7 @@
         _NoiseTex ("Noise", 2D) = "white" {}
         _FgColor ("FG Color", Color) = (1, 0.1, 0.05)
         _BgTint ("BG Tint", Color) = (1.0, 0.9, 0.8)
+        _Brightness ("Brightness", Range(0, 10)) = 6
         _Speed ("Speed", Range(0, 5.0)) = 1.0
         _Intensity ("Intensity", Range(0, 4)) = 0
     }
@@ -44,6 +45,7 @@
             float4 _NoiseTex_ST;
             fixed3 _FgColor;
             fixed3 _BgTint;
+            float _Brightness;
             float _Speed;
             float _Intensity;
 
@@ -136,8 +138,8 @@
                 if (dist < 0) transparency = 0;
 
                 fixed3 color = lerp(
-                    _FgColor * 3 * _BgTint,
-                    _FgColor * 6,
+                    _FgColor * _Brightness * _BgTint,
+                    _FgColor * _Brightness,
                     brightnessAmount
                 );
                 return fixed4(color, transparency);

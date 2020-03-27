@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PortalMat
+  m_Name: ForestPortalMat
   m_Shader: {fileID: 4800000, guid: 99da796817dad1e8f96b2b50ebcc3ea3, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -60,6 +60,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - _Brightness: 1.34
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -74,13 +75,13 @@ Material:
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _Speed: 1
+    - _Speed: 2
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
     - _BgColor: {r: 0.3, g: 0.03, b: 0.01, a: 1}
-    - _BgTint: {r: 1, g: 0.5283019, b: 0.9585503, a: 1}
+    - _BgTint: {r: 0.8584906, g: 0.31213856, b: 0.08098967, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _FgColor: {r: 1, g: 0.13842562, b: 0.0754717, a: 1}
+    - _FgColor: {r: 0.3594874, g: 0.9339623, b: 0.21586865, a: 1}
