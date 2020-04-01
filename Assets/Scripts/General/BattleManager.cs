@@ -24,6 +24,10 @@ public class BattleManager
     private List<Enemy> _enemies = new List<Enemy>();
     /// A list of all enemies currently in the battle.
     public List<Enemy> enemies { get => _enemies; }
+    private List<Portal> _friendlyPortals = new List<Portal>(), _enemyPortals = new List<Portal>();
+    public List<Portal> friendlyPortals { get => _friendlyPortals; }
+    public List<Portal> enemyPortals { get => _enemyPortals; }
+
     private List<Card> drawPile = new List<Card>();
     private List<Card> hand = new List<Card>();
     private List<Card> discardPile = new List<Card>();
@@ -41,6 +45,8 @@ public class BattleManager
     public event Action OnShuffle;
     /// Invoked when the amount of energy the player has is changed.
     public event Action OnEnergyChange;
+    /// Invoked when a field entity or portal is added or removed.
+    public event Action OnFieldChange;
 
     private bool triggerEndTurn = false;
 
@@ -49,6 +55,7 @@ public class BattleManager
     {
         _enemies.Add(enemy);
         enemy.UpdateActionIndicatorWrapper();
+        OnFieldChange?.Invoke();
     }
 
     /// Removes an enemy from the battle. This method is automatically called by Enemy.
@@ -59,6 +66,26 @@ public class BattleManager
         {
             Debug.Log("Battle complete! TODO: Do anything");
         }
+        OnFieldChange?.Invoke();
+    }
+
+    public void AddFriendlyPortal(Portal portal)
+    {
+        _friendlyPortals.Add(portal);
+        OnFieldChange?.Invoke();
+    }
+
+    public void AddEnemyPortal(Portal portal)
+    {
+        _enemyPortals.Add(portal);
+        OnFieldChange?.Invoke();
+    }
+
+    public void RemovePortal(Portal portal)
+    {
+        _friendlyPortals.Remove(portal);
+        _enemyPortals.Remove(portal);
+        OnFieldChange?.Invoke();
     }
 
     private void MoveDiscardToDraw()
@@ -168,6 +195,18 @@ public class BattleManager
             {
                 // This way, we wait for each enemy to do their thing before moving on.
                 yield return enemy.DoAttackWrapper();
+            }
+
+            // Upgrade enemy portals, then friendly portals.
+            foreach (Portal portal in enemyPortals)
+            {
+                if (!portal.CanBeUpgraded()) continue;
+                yield return portal.Upgrade();
+            }
+            foreach (Portal portal in friendlyPortals)
+            {
+                if (!portal.CanBeUpgraded()) continue;
+                yield return portal.Upgrade();
             }
 
             // Return to player turn.

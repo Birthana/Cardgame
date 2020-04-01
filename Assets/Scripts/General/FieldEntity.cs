@@ -9,6 +9,8 @@ public class FieldEntity : MonoBehaviour
 {
     [Tooltip("This should have triggers named Attack and Damaged.")]
     public Animator animator;
+    [Tooltip("Used when spacing out entities on the battlefield.")]
+    public float WIDTH = 20f;
     public int maxHealth;
     public int health { get => Math.Max(_health, 0); }
     public int block { get => _block; }

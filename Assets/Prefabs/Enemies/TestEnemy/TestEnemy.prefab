@@ -157,12 +157,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab1e84273c0778de6a324b4335543a97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 8224568284907960995}
+  WIDTH: 20
   maxHealth: 15
   actionIndicator: {fileID: 4666492055715580300}
   strength: 5
-  attackAnimation: {fileID: 8846765784876183809, guid: a2ebac5e583d6288dbe02f4550a46896,
-    type: 3}
-  animator: {fileID: 8224568284907960995}
 --- !u!114 &6213615893135696157
 MonoBehaviour:
   m_ObjectHideFlags: 0

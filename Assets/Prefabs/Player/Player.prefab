@@ -129,6 +129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 3407165516405824776}
+  WIDTH: 20
   maxHealth: 50
   maxEnergy: 3
 --- !u!95 &3407165516405824776
