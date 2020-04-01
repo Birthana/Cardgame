@@ -168,6 +168,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0305ab0e1deb1ab459591802727d1bbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyAttacks: []
 --- !u!61 &186606167
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -208,6 +209,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 12
   currentHealth: 0
+  block: 0
   healthText: {fileID: 632211826}
 --- !u!212 &186606169
 SpriteRenderer:
@@ -686,8 +688,8 @@ Canvas:
   m_GameObject: {fileID: 505825067}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 519420031}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -1548,6 +1550,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0305ab0e1deb1ab459591802727d1bbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyAttacks: []
 --- !u!61 &1111753529
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1588,6 +1591,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 12
   currentHealth: 0
+  block: 0
   healthText: {fileID: 813806589}
 --- !u!212 &1111753531
 SpriteRenderer:
@@ -1830,6 +1834,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f54082837b777a248a1ba914ab15187f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerHealth: {fileID: 0}
 --- !u!4 &1664179878
 Transform:
   m_ObjectHideFlags: 0
@@ -2094,6 +2099,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0305ab0e1deb1ab459591802727d1bbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyAttacks: []
 --- !u!61 &2133889626
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2134,6 +2140,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 12
   currentHealth: 0
+  block: 0
   healthText: {fileID: 631686153}
 --- !u!212 &2133889628
 SpriteRenderer:
