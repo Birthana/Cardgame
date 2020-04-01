@@ -515,11 +515,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CARD_SPACING: 400
   cardsForSell:
-  - {fileID: 2143908458}
-  - {fileID: 196127310}
-  - {fileID: 207481767}
-  - {fileID: 603445329}
-  - {fileID: 1118386553}
+  - card: {fileID: 2143908458}
+    cost: 10
+  - card: {fileID: 196127310}
+    cost: 15
+  - card: {fileID: 207481767}
+    cost: 20
+  - card: {fileID: 603445329}
+    cost: 25
+  - card: {fileID: 1118386553}
+    cost: 30
 --- !u!1 &300375504
 GameObject:
   m_ObjectHideFlags: 0
