@@ -253,6 +253,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardAvatar (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 2053059413831345711, guid: ac4ecf33c3fd9b940bea7b4a0aef52eb,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: c7b34c838e7de2b4580a065fe608caf4,
+        type: 3}
     - target: {fileID: 6396718379612889456, guid: ac4ecf33c3fd9b940bea7b4a0aef52eb,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -425,6 +431,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardAvatar (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 2053059413831345711, guid: ac4ecf33c3fd9b940bea7b4a0aef52eb,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: c7b34c838e7de2b4580a065fe608caf4,
+        type: 3}
     - target: {fileID: 6396718379612889456, guid: ac4ecf33c3fd9b940bea7b4a0aef52eb,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -740,6 +752,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardAvatar (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 2053059413831345711, guid: ac4ecf33c3fd9b940bea7b4a0aef52eb,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: c7b34c838e7de2b4580a065fe608caf4,
+        type: 3}
     - target: {fileID: 6396718379612889456, guid: ac4ecf33c3fd9b940bea7b4a0aef52eb,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -912,6 +930,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardAvatar (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 2053059413831345711, guid: ac4ecf33c3fd9b940bea7b4a0aef52eb,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: c7b34c838e7de2b4580a065fe608caf4,
+        type: 3}
     - target: {fileID: 6396718379612889456, guid: ac4ecf33c3fd9b940bea7b4a0aef52eb,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -1115,6 +1139,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardAvatar
       objectReference: {fileID: 0}
+    - target: {fileID: 2053059413831345711, guid: ac4ecf33c3fd9b940bea7b4a0aef52eb,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: c7b34c838e7de2b4580a065fe608caf4,
+        type: 3}
     - target: {fileID: 6396718379612889456, guid: ac4ecf33c3fd9b940bea7b4a0aef52eb,
         type: 3}
       propertyPath: m_textInfo.characterCount
