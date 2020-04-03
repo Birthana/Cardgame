@@ -201,14 +201,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CARD_SPACING: 400
+  numCardsToSell: 5
   cardsForSell:
-  - {fileID: 1581474101}
-  - {fileID: 1381272063}
-  - {fileID: 1263194177}
-  - {fileID: 1450102809}
-  - {fileID: 2126089113}
-  cardInfoPlaceholder: {fileID: 11400000, guid: cf66d893573c64945a6c8d90e1d8d6b4,
-    type: 2}
+  - card: {fileID: 1581474101}
+    cost: 10
+  - card: {fileID: 1381272063}
+    cost: 15
+  - card: {fileID: 1263194177}
+    cost: 20
+  - card: {fileID: 1450102809}
+    cost: 25
+  - card: {fileID: 2126089113}
+    cost: 30
 --- !u!1 &1030224758
 GameObject:
   m_ObjectHideFlags: 0
@@ -424,6 +428,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardAvatar (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 2053059413831345711, guid: ac4ecf33c3fd9b940bea7b4a0aef52eb,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: c7b34c838e7de2b4580a065fe608caf4,
+        type: 3}
     - target: {fileID: 6396718379612889456, guid: ac4ecf33c3fd9b940bea7b4a0aef52eb,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -596,6 +606,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardAvatar (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 2053059413831345711, guid: ac4ecf33c3fd9b940bea7b4a0aef52eb,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: c7b34c838e7de2b4580a065fe608caf4,
+        type: 3}
     - target: {fileID: 6396718379612889456, guid: ac4ecf33c3fd9b940bea7b4a0aef52eb,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -768,6 +784,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardAvatar (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 2053059413831345711, guid: ac4ecf33c3fd9b940bea7b4a0aef52eb,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: c7b34c838e7de2b4580a065fe608caf4,
+        type: 3}
     - target: {fileID: 6396718379612889456, guid: ac4ecf33c3fd9b940bea7b4a0aef52eb,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -940,6 +962,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardAvatar
       objectReference: {fileID: 0}
+    - target: {fileID: 2053059413831345711, guid: ac4ecf33c3fd9b940bea7b4a0aef52eb,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: c7b34c838e7de2b4580a065fe608caf4,
+        type: 3}
     - target: {fileID: 6396718379612889456, guid: ac4ecf33c3fd9b940bea7b4a0aef52eb,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -1112,6 +1140,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardAvatar (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 2053059413831345711, guid: ac4ecf33c3fd9b940bea7b4a0aef52eb,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: c7b34c838e7de2b4580a065fe608caf4,
+        type: 3}
     - target: {fileID: 6396718379612889456, guid: ac4ecf33c3fd9b940bea7b4a0aef52eb,
         type: 3}
       propertyPath: m_textInfo.characterCount
