@@ -26,6 +26,7 @@ public class CharacterSelection : MonoBehaviour
     }
     private void Update()
     {
+        //Used to transition between colors of different characters.
         backgroundColor.color = Color.Lerp(backgroundColor.color, desiredColor, Time.deltaTime * backgroundColorTransitionSpeed);
     }
     public void LeftArrow() 
@@ -47,7 +48,7 @@ public class CharacterSelection : MonoBehaviour
     public void Confirm()
     {
         Debug.Log(string.Format("Character {0}:{1} has been chosen", selectedCharacterIndex, characterList[selectedCharacterIndex].characterName));
-        SceneManager.LoadScene("CardEffects");
+        //SceneManager.LoadScene("CardEffects");
     }
 
     private void UpdateCharacterSelectionUI() 
