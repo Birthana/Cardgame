@@ -202,17 +202,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CARD_SPACING: 400
   numCardsToSell: 5
+  costVariancePercent: 20
   cardsForSell:
   - card: {fileID: 1581474101}
     cost: 10
+    actualCost: 0
   - card: {fileID: 1381272063}
     cost: 15
+    actualCost: 0
   - card: {fileID: 1263194177}
     cost: 20
+    actualCost: 0
   - card: {fileID: 1450102809}
     cost: 25
+    actualCost: 0
   - card: {fileID: 2126089113}
     cost: 30
+    actualCost: 0
 --- !u!1 &1030224758
 GameObject:
   m_ObjectHideFlags: 0

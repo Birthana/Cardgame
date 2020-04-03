@@ -6,6 +6,7 @@ public class MerchantUIModified : MonoBehaviour
 {
     public float CARD_SPACING;
     public int numCardsToSell;
+    public float costVariancePercent;   //Card cost will vary by up to this percent.
 
     [SerializeField]
     private List<MerchantCard> cardsForSell;
@@ -15,6 +16,7 @@ public class MerchantUIModified : MonoBehaviour
     private void Start()
     {
         ChooseCards();
+        SetCost();
         DisplayUI();
     }
 
@@ -30,13 +32,13 @@ public class MerchantUIModified : MonoBehaviour
                 if (selectedCard != null)
                 {
                     MerchantCard cardToBuy = GetMerchantCard(selectedCard);
-                    if (Currency.GetCurrency() >= cardToBuy.cost)
+                    if (Currency.GetCurrency() >= cardToBuy.actualCost)
                     {
                         Deck.instance.Add(cardToBuy.card.displaying);
-                        Currency.SubtractCurrency(cardToBuy.cost);
+                        Currency.SubtractCurrency(cardToBuy.actualCost);
                         Debug.Log(Currency.GetCurrency());
 
-                        cardsForSell.Remove(cardToBuy);
+                        chosenCards.Remove(cardToBuy);
                         Destroy(cardToBuy.card.gameObject);
                         DisplayUI();
                     }
@@ -80,14 +82,38 @@ public class MerchantUIModified : MonoBehaviour
         }
     }
 
+    private void SetCost()
+    {
+        int newCost;
+        int operatorToUse;
+        float actualVariance;
+
+        for (int i = 0; i < chosenCards.Count; i++)
+        {
+            operatorToUse = Random.Range(0, 2);
+            actualVariance = Random.Range(0f, costVariancePercent);
+
+            if (operatorToUse == 0)
+            {
+                newCost = Mathf.RoundToInt(chosenCards[i].cost * (1 + (actualVariance / 100)));
+            }
+            else
+            {
+                newCost = Mathf.RoundToInt(chosenCards[i].cost * (1 - (actualVariance / 100)));
+            }
+
+            chosenCards[i].actualCost = newCost;
+        }
+    }
+
     public MerchantCard GetMerchantCard(CardAvatar card)
     {
-        MerchantCard result = cardsForSell[0];
-        for (int i = 0; i < cardsForSell.Count; i++)
+        MerchantCard result = chosenCards[0];
+        for (int i = 0; i < chosenCards.Count; i++)
         {
-            if (card.Equals(cardsForSell[i].card))
+            if (card.Equals(chosenCards[i].card))
             {
-                result = cardsForSell[i];
+                result = chosenCards[i];
             }
         }
         return result;
@@ -107,9 +133,9 @@ public class MerchantUIModified : MonoBehaviour
             leftoverCards[i].card.gameObject.SetActive(false);
         }
 
-        for (int i = 0; i < numCardsToSell; i++)
+        for (int i = 0; i < chosenCards.Count; i++)
         {
-            float transformAmount = ((float)i) - ((float)numCardsToSell - 1) / 2;
+            float transformAmount = ((float)i) - ((float)chosenCards.Count - 1) / 2;
             float angle = transformAmount * 3.0f;
             Vector3 position = new Vector3(
                 Mathf.Sin(angle * Mathf.Deg2Rad),
@@ -126,6 +152,9 @@ public class MerchantUIModified : MonoBehaviour
     {
         public CardAvatar card;
         public int cost;
+
+        [HideInInspector]
+        public int actualCost;
     }
 }
 
