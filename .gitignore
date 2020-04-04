@@ -1,3 +1,5 @@
+*.blend1
+
 # This .gitignore file should be placed at the root of your Unity project directory
 #
 # Get latest from https://github.com/github/gitignore/blob/master/Unity.gitignore
@@ -21,6 +23,9 @@
 
 # Visual Studio cache directory
 .vs/
+.vscode/
+
+# VS Code Stuff
 .vscode/
 
 # Gradle cache directory
