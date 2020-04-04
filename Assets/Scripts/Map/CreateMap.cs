@@ -6,12 +6,12 @@ public class CreateMap : MonoBehaviour
 {
     private float SCREEN_HORIZONTAL_SPACING = 60f;  //Minimum spacing between sides of screen and events.
     private float SCREEN_VERTICAL_SPACING = 15f;  //Minimum spacing between top and bottom of screen and events.
-    private float EVENT_SPACING = 30f;  //Minimum spacing between each event.
+    private float EVENT_SPACING = 5f;  //Minimum spacing between each event.
 
     private Vector3 bottomPosition;
     private Vector3 topPosition;
     private List<Vector3> otherPositions = new List<Vector3>();
-    private int numToGenerate = 1;
+    private int numToGenerate = 10;
 
     public GameObject enemyEncounter;
     public GameObject town;
@@ -40,17 +40,16 @@ public class CreateMap : MonoBehaviour
     private void Fill()
     {
         Vector3 newPosition;
+        Vector3 temp;
 
         for (int i = 0; i < numToGenerate; i++)
         {
             do
             {
-                newPosition = Camera.main.ScreenToWorldPoint(new Vector3(
+                temp = Camera.main.ScreenToWorldPoint(new Vector3(
                     Random.Range(SCREEN_HORIZONTAL_SPACING, Screen.width - SCREEN_HORIZONTAL_SPACING),
-                    Random.Range(bottomPosition.y, topPosition.y)));
-                /*newPosition = new Vector3(
-                    Random.Range(SCREEN_HORIZONTAL_SPACING, Screen.width - SCREEN_HORIZONTAL_SPACING),
-                    Random.Range(bottomPosition.y, topPosition.y));*/
+                    Random.Range(SCREEN_VERTICAL_SPACING,Screen.height - SCREEN_VERTICAL_SPACING)));
+                newPosition = new Vector3(temp.x, temp.y, 0);
             } while (!EnoughSpacing(newPosition));
 
             otherPositions.Add(newPosition);
