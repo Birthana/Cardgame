@@ -1976,5 +1976,11 @@ PrefabInstance:
       propertyPath: SELECTED_SCALE
       value: 1.8
       objectReference: {fileID: 0}
+    - target: {fileID: 5272508119475065609, guid: e4f054834cc37c920a806a4daff95228,
+        type: 3}
+      propertyPath: cardAvatarPrefab
+      value: 
+      objectReference: {fileID: 2519713381551346388, guid: f491d2fdcdb8fa54a8dfc602ca849d2d,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e4f054834cc37c920a806a4daff95228, type: 3}
