@@ -9,12 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 32d3a60a902b0df4980b402dd2b1d64d, type: 3}
-  m_Name: Basic Block5
+  m_Script: {fileID: 11500000, guid: f9589abd7c029736f9c12474afa3c434, type: 3}
+  m_Name: Damage8
   m_EditorClassIdentifier: 
-  cardName: Block
-  level: 1
-  cardEffectText: Increases BLOCK by 5.
-  target: 0
-  effects:
-  - {fileID: 11400000, guid: d1862cfeb2d05f4a8bfebd35c114949d, type: 2}
+  amount: 8

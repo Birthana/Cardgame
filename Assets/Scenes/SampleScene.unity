@@ -663,6 +663,11 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1819154576184805260, guid: 7684f1013f7038c31bfe33e384eac465,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2861136075968848355, guid: 7684f1013f7038c31bfe33e384eac465,
         type: 3}
       propertyPath: m_Name
@@ -1807,11 +1812,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deckContents:
-  - card: {fileID: 11400000, guid: fce67c48aad515cc6982f8ed6a1943f9, type: 2}
+  - card: {fileID: 11400000, guid: c084dac97bf7746c0b6a495c1ddbff6c, type: 2}
     quantity: 10
-  - card: {fileID: 11400000, guid: 9760353460d50b02a85e37c6ddb2c7e1, type: 2}
+  - card: {fileID: 11400000, guid: 6ff8d9dafa4cef008a8d54baa586a0be, type: 2}
     quantity: 10
-  - card: {fileID: 11400000, guid: 7b17f43cd0c480bcdbefd927dbd3d113, type: 2}
+  - card: {fileID: 11400000, guid: 9c943839804ff44d4878e8acbb2b96c9, type: 2}
     quantity: 5
 --- !u!224 &1535724241 stripped
 RectTransform:
@@ -1839,6 +1844,11 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 379718450720314907, guid: 7684f1013f7038c31bfe33e384eac465,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1819154576184805260, guid: 7684f1013f7038c31bfe33e384eac465,
         type: 3}
       propertyPath: m_Mesh
       value: 
@@ -2213,6 +2223,11 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1819154576184805260, guid: 7684f1013f7038c31bfe33e384eac465,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2861136075968848355, guid: 7684f1013f7038c31bfe33e384eac465,
         type: 3}
       propertyPath: m_Name
@@ -2543,6 +2558,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6324401271056016449, guid: 21aeccc4ebf62534e8108b245ec92113,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 6903272223873386961, guid: 21aeccc4ebf62534e8108b245ec92113,
         type: 3}
       propertyPath: m_LocalPosition.x

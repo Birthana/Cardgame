@@ -18,6 +18,7 @@ public class Card : ScriptableObject
     public string cardName = "New Card";
     [Tooltip("How much energy the card costs to play.")]
     public int level = 1;
+    [TextArea]
     [Tooltip("The text that will be shown in the body (bottom half) of the card.")]
     public string cardEffectText = "Does nothing.";
     [Tooltip("How the player should select targets for this card.")]

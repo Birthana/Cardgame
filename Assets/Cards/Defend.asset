@@ -9,7 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 178b092ade58b4093b208ade1c805e95, type: 3}
-  m_Name: Block5
+  m_Script: {fileID: 11500000, guid: 32d3a60a902b0df4980b402dd2b1d64d, type: 3}
+  m_Name: Defend
   m_EditorClassIdentifier: 
-  amount: 5
+  cardName: Defend
+  level: 1
+  cardEffectText: Gain 6 block.
+  target: 0
+  effects:
+  - {fileID: 11400000, guid: d1862cfeb2d05f4a8bfebd35c114949d, type: 2}

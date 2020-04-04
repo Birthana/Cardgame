@@ -10,11 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 32d3a60a902b0df4980b402dd2b1d64d, type: 3}
-  m_Name: Damage5 All
+  m_Name: Breakthrough
   m_EditorClassIdentifier: 
-  cardName: Slash
-  level: 2
-  cardEffectText: Deals 5 DAMAGE to EVERY enemy.
-  target: 1
-  effects:
-  - {fileID: 11400000, guid: fe3868125ee438f198dba69beab6c1c4, type: 2}
+  cardName: Breakthrough
+  level: 1
+  cardEffectText: 'TODO: Deal 3 damage.
+
+    Remove all block.
+
+    Draw a card.'
+  target: 2
+  effects: []

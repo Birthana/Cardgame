@@ -10,11 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 32d3a60a902b0df4980b402dd2b1d64d, type: 3}
-  m_Name: Basic Damage5
+  m_Name: Parry
   m_EditorClassIdentifier: 
-  cardName: Stab
+  cardName: Defend
   level: 1
-  cardEffectText: Deals 5 DAMAGE to an enemy.
-  target: 2
+  cardEffectText: 'Gain 4 block.
+
+    TODO:Reduce damage by 25%.'
+  target: 0
   effects:
-  - {fileID: 11400000, guid: fe3868125ee438f198dba69beab6c1c4, type: 2}
+  - {fileID: 11400000, guid: 4f2416b71bd40c3e8af25868dbf60524, type: 2}
