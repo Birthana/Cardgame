@@ -249,4 +249,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyEncounter: {fileID: 6446999345921077196, guid: a8b345ab8b9b7d24992e4e3d556a61b8,
     type: 3}
-  town: {fileID: 0}
+  town: {fileID: 2895404605144634546, guid: 7d22a82c9edd4bc4f807840c47b830a5, type: 3}
+  line: {fileID: 7919222841984809328, guid: 25b77d51c2f0d6a4890ef89afd8f6ed2, type: 3}
