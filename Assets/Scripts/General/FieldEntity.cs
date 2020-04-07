@@ -24,15 +24,24 @@ public class FieldEntity : MonoBehaviour
     private int _health;
     private int _block = 0;
 
+    private float seOutgoingDamageMultiplier = 1.0f;
+    private float seIncomingDamageMultiplier = 1.0f;
+
     void Start()
     {
         _health = maxHealth;
         OnStatsChanged?.Invoke();
     }
 
+    public void ModifyActionContextAsSource(ActionContext context)
+    {
+        context.damageMultiplier *= seOutgoingDamageMultiplier;
+    }
+
     /// Applies the given amount of damage. 
     public void TakeDamage(int damage)
     {
+        damage = ComputeDamageReceived(damage);
         if (block >= damage)
         {
             _block -= damage;
@@ -50,6 +59,26 @@ public class FieldEntity : MonoBehaviour
                 Destroy(this.gameObject);
             }
         }
+    }
+
+    /// Applies the given amount of damage as if this entity has no block.
+    public void TakeDamageIgnoringBlock(int damage)
+    {
+        damage = ComputeDamageReceived(damage);
+        _health -= damage;
+        OnStatsChanged?.Invoke();
+        if (_health <= 0)
+        {
+            OnDeath?.Invoke();
+            Destroy(this.gameObject);
+        }
+    }
+
+    /// Takes the amount of dealt damage and returns a predicted amount of damage received, taking
+    /// things like status effects into account.
+    public int ComputeDamageReceived(int damageDealt)
+    {
+        return Mathf.FloorToInt(damageDealt * seIncomingDamageMultiplier);
     }
 
     public void AddBlock(int block)
@@ -78,8 +107,22 @@ public class FieldEntity : MonoBehaviour
         animator.SetTrigger("Attack");
     }
 
+    /// Increases / decreases the outgoing damage multiplier by a certain amount. 0.1 == 10%.
+    public void ModifySEOutgoingDamageMultiplier(float changeAmount)
+    {
+        seOutgoingDamageMultiplier += changeAmount;
+    }
+
+    /// Increases / decreases the incoming damage multiplier by a certain amount. 0.1 == 10%.
+    public void ModifySEIncomingDamageMultiplier(float changeAmount)
+    {
+        seIncomingDamageMultiplier += changeAmount;
+    }
+
     public virtual void StartTurn()
     {
         _block = 0;
+        seOutgoingDamageMultiplier = 1.0f;
+        seIncomingDamageMultiplier = 1.0f;
     }
 }

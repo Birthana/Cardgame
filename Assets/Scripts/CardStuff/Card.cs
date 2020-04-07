@@ -30,6 +30,7 @@ public class Card : ScriptableObject
     public IEnumerator Play(List<FieldEntity> targets)
     {
         ActionContext context = new ActionContext(targets);
+        Player.instance.ModifyActionContextAsSource(context);
         foreach (CardEffect effect in effects)
         {
             yield return effect.ApplyEffect(context);

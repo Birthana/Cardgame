@@ -17,8 +17,9 @@ public abstract class Enemy : FieldEntity
     }
 
     private ActionContext CreateActionContext() {
-        Player player = Player.instance;
-        return new ActionContext(player);
+        ActionContext context = new ActionContext(Player.instance);
+        ModifyActionContextAsSource(context);
+        return context;
     }
 
     public void UpdateActionIndicatorWrapper()
