@@ -12,16 +12,17 @@ public class ActionIndicator : MonoBehaviour
 
     public void ShowAttack(int amount)
     {
+        amount = Player.instance.ComputeDamageReceived(amount);
         gameObject.SetActive(true);
         iconRenderer.sprite = attackSprite;
         valueText.text = "" + amount;
     }
 
-    public void ShowBlock()
+    public void ShowBlock(int amount)
     {
         gameObject.SetActive(true);
         iconRenderer.sprite = blockSprite;
-        valueText.text = "";
+        valueText.text = "" + amount;
     }
 
     public void Hide() {

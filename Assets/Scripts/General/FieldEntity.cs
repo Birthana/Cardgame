@@ -124,5 +124,6 @@ public class FieldEntity : MonoBehaviour
         _block = 0;
         seOutgoingDamageMultiplier = 1.0f;
         seIncomingDamageMultiplier = 1.0f;
+        OnStatsChanged?.Invoke();
     }
 }

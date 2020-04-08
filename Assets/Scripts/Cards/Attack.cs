@@ -22,8 +22,8 @@ public class Attack : Card
     protected override IEnumerator Play(ActionContext context)
     {
         Player.instance.TriggerAttackAnim();
-        context.targets[0].TakeDamage(context.ComputeDamage(8));
         context.targets[0].TriggerDamagedAnim();
+        context.targets[0].TakeDamage(context.ComputeDamage(8));
         yield return new WaitForSeconds(0.5f);
     }
 }

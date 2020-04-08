@@ -26,9 +26,11 @@ public class Breakthrough : Card
     protected override IEnumerator Play(ActionContext context)
     {
         Player.instance.TriggerAttackAnim();
-        context.targets[0].TakeDamage(context.ComputeDamage(3));
         context.targets[0].TriggerDamagedAnim();
+        context.targets[0].TakeDamage(context.ComputeDamage(3));
         yield return new WaitForSeconds(0.5f);
+        // Don't continue if the damage already killed the target.
+        if (context.targets[0].dead) yield break;
         context.targets[0].ClearBlock();
         yield return new WaitForSeconds(0.5f);
     }

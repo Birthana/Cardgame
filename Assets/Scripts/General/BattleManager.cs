@@ -187,7 +187,7 @@ public class BattleManager
 
             foreach (Enemy enemy in enemies)
             {
-                enemy.ClearBlock();
+                enemy.StartTurn();
             }
 
             // Do enemy attacks.
@@ -210,16 +210,16 @@ public class BattleManager
             }
 
             // Return to player turn.
-            foreach (Enemy enemy in enemies)
-            {
-                enemy.UpdateActionIndicatorWrapper();
-            }
             Player player = Player.instance;
-            player.ClearBlock();
+            player.StartTurn();
             _energy = player.maxEnergy;
             OnEnergyChange?.Invoke();
             // TODO: Animation.
             DrawCards(5);
+            foreach (Enemy enemy in enemies)
+            {
+                enemy.UpdateActionIndicatorWrapper();
+            }
             triggerEndTurn = false;
         }
     }

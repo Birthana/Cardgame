@@ -26,8 +26,8 @@ public class Backstab : Card
     protected override IEnumerator Play(ActionContext context)
     {
         Player.instance.TriggerAttackAnim();
-        context.targets[0].TakeDamageIgnoringBlock(context.ComputeDamage(10));
         context.targets[0].TriggerDamagedAnim();
+        context.targets[0].TakeDamageIgnoringBlock(context.ComputeDamage(10));
         yield return new WaitForSeconds(0.5f);
     }
 }

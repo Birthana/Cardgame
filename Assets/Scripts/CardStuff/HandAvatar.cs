@@ -91,6 +91,10 @@ public class HandAvatar : MonoBehaviour
         ignoreInteraction = true;
         yield return animCoroutine;
         ignoreInteraction = false;
+        foreach (Enemy enemy in BattleManager.instance.enemies) {
+            // The card just played may have affected the numbers on an enemy's action indicator.
+            enemy.UpdateActionIndicatorWrapper();
+        }
         yield break;
     }
 
