@@ -33,7 +33,6 @@ public abstract class Enemy : FieldEntity
 
     public IEnumerator DoAttackWrapper() {
         actionIndicator.Hide();
-        UpdateActionIndicator(actionIndicator, CreateActionContext());
         yield return DoAttack(CreateActionContext());
     }
 

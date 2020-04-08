@@ -49,14 +49,20 @@ public class Battlefield : MonoBehaviour
         }
 
         int index = 0;
-        foreach (Portal portal in BattleManager.instance.friendlyPortals)
+        if (BattleManager.instance.friendlyPortal != null)
         {
-            if (index >= playerPortalOrigins.Length) {
-                Debug.LogWarning("Too many friendly portals!");
-                break;
-            }
+            Portal portal = BattleManager.instance.friendlyPortal;
             Vector3 oldScale = portal.transform.localScale;
             portal.transform.parent = playerPortalOrigins[index].transform;
+            portal.transform.localScale = oldScale;
+            portal.transform.localPosition = Vector3.zero;
+            index++;
+        }
+        if (BattleManager.instance.enemyPortal != null)
+        {
+            Portal portal = BattleManager.instance.enemyPortal;
+            Vector3 oldScale = portal.transform.localScale;
+            portal.transform.parent = enemyPortalOrigins[index].transform;
             portal.transform.localScale = oldScale;
             portal.transform.localPosition = Vector3.zero;
             index++;
@@ -86,12 +92,12 @@ public class Battlefield : MonoBehaviour
         foreach (GameObject o in playerPortalOrigins)
         {
             if (o == null) continue;
-            Gizmos.DrawWireSphere(o.transform.position, o.transform.lossyScale.x * 11);
+            Gizmos.DrawWireSphere(o.transform.position, o.transform.lossyScale.x * 7);
         }
         foreach (GameObject o in enemyPortalOrigins)
         {
             if (o == null) continue;
-            Gizmos.DrawWireSphere(o.transform.position, o.transform.lossyScale.x * 11);
+            Gizmos.DrawWireSphere(o.transform.position, o.transform.lossyScale.x * 7);
         }
     }
 

@@ -24,9 +24,9 @@ public class BattleManager
     private List<Enemy> _enemies = new List<Enemy>();
     /// A list of all enemies currently in the battle.
     public List<Enemy> enemies { get => _enemies; }
-    private List<Portal> _friendlyPortals = new List<Portal>(), _enemyPortals = new List<Portal>();
-    public List<Portal> friendlyPortals { get => _friendlyPortals; }
-    public List<Portal> enemyPortals { get => _enemyPortals; }
+    private Portal _friendlyPortal = null, _enemyPortal = null;
+    public Portal friendlyPortal { get => _friendlyPortal; }
+    public Portal enemyPortal { get => _enemyPortal; }
 
     private List<Card> drawPile = new List<Card>();
     private List<Card> hand = new List<Card>();
@@ -69,22 +69,22 @@ public class BattleManager
         OnFieldChange?.Invoke();
     }
 
-    public void AddFriendlyPortal(Portal portal)
+    public void SetFriendlyPortal(Portal portal)
     {
-        _friendlyPortals.Add(portal);
+        _friendlyPortal = portal;
         OnFieldChange?.Invoke();
     }
 
-    public void AddEnemyPortal(Portal portal)
+    public void SetEnemyPortal(Portal portal)
     {
-        _enemyPortals.Add(portal);
+        _enemyPortal = portal;
         OnFieldChange?.Invoke();
     }
 
     public void RemovePortal(Portal portal)
     {
-        _friendlyPortals.Remove(portal);
-        _enemyPortals.Remove(portal);
+        if (_friendlyPortal == portal) _friendlyPortal = null;
+        if (_enemyPortal == portal) _enemyPortal = null;
         OnFieldChange?.Invoke();
     }
 
@@ -195,18 +195,6 @@ public class BattleManager
             {
                 // This way, we wait for each enemy to do their thing before moving on.
                 yield return enemy.DoAttackWrapper();
-            }
-
-            // Upgrade enemy portals, then friendly portals.
-            foreach (Portal portal in enemyPortals)
-            {
-                if (!portal.CanBeUpgraded()) continue;
-                yield return portal.Upgrade();
-            }
-            foreach (Portal portal in friendlyPortals)
-            {
-                if (!portal.CanBeUpgraded()) continue;
-                yield return portal.Upgrade();
             }
 
             // Return to player turn.

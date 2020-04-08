@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEditor;
 
 /// Represents a single in-game card.
-[CreateAssetMenu(menuName = "Card Game Stuff/Card", fileName = "New Card")]
 public abstract class Card : ScriptableObject
 {
     public enum TargetMode

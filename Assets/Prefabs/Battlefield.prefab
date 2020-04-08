@@ -24,98 +24,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 339799992}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -25.420002, y: 20.8, z: 8.3}
-  m_LocalScale: {x: 1.1385864, y: 1.1385864, z: 1.1385864}
-  m_Children: []
-  m_Father: {fileID: 7095978991479827449}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1698354488
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1698354489}
-  m_Layer: 0
-  m_Name: PlayerPortal3
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1698354489
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1698354488}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -26, y: -25.484003, z: 8.3}
-  m_LocalScale: {x: 1.1385864, y: 1.1385864, z: 1.1385864}
-  m_Children: []
-  m_Father: {fileID: 7095978991479827449}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &3089074140013737727
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4282112365305413138}
-  m_Layer: 0
-  m_Name: EnemyPortal2
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4282112365305413138
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3089074140013737727}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 87.72001, y: -2.5160036, z: 8.3}
-  m_LocalScale: {x: 1.1385864, y: 1.1385864, z: 1.1385864}
-  m_Children: []
-  m_Father: {fileID: 7095978991479827449}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &4554022985480372009
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1689413582847101603}
-  m_Layer: 0
-  m_Name: PlayerPortal2
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1689413582847101603
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4554022985480372009}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -35.28, y: -2.5160036, z: 8.3}
-  m_LocalScale: {x: 1.1385864, y: 1.1385864, z: 1.1385864}
+  m_LocalPosition: {x: -29.7, y: 9.6, z: 8.3}
+  m_LocalScale: {x: 2.4185898, y: 2.4185898, z: 2.4185898}
   m_Children: []
   m_Father: {fileID: 7095978991479827449}
   m_RootOrder: 0
@@ -148,12 +58,8 @@ Transform:
   m_LocalPosition: {x: -19.5, y: -2.8, z: 2}
   m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_Children:
-  - {fileID: 1689413582847101603}
   - {fileID: 339799993}
-  - {fileID: 1698354489}
-  - {fileID: 4282112365305413138}
   - {fileID: 183414787469379114}
-  - {fileID: 8877700272738648006}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -172,12 +78,8 @@ MonoBehaviour:
   PLAYER_ENEMY_GAP: 12
   playerPortalOrigins:
   - {fileID: 339799992}
-  - {fileID: 4554022985480372009}
-  - {fileID: 1698354488}
   enemyPortalOrigins:
   - {fileID: 7499120448307794787}
-  - {fileID: 3089074140013737727}
-  - {fileID: 8976796062351110799}
 --- !u!1 &7499120448307794787
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,39 +104,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7499120448307794787}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 78.28, y: 20.799997, z: 8.3}
-  m_LocalScale: {x: 1.1385864, y: 1.1385864, z: 1.1385864}
+  m_LocalPosition: {x: 70.7, y: 10.4, z: 8.3}
+  m_LocalScale: {x: 2.0213494, y: 2.0213494, z: 2.0213494}
   m_Children: []
   m_Father: {fileID: 7095978991479827449}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &8976796062351110799
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8877700272738648006}
-  m_Layer: 0
-  m_Name: EnemyPortal3
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8877700272738648006
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8976796062351110799}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 77.7, y: -25.484003, z: 8.3}
-  m_LocalScale: {x: 1.1385864, y: 1.1385864, z: 1.1385864}
-  m_Children: []
-  m_Father: {fileID: 7095978991479827449}
-  m_RootOrder: 5
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

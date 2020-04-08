@@ -18,7 +18,7 @@ public class Portal : MonoBehaviour
     const float MAX_SPEED = 2.0f;
     // How much to reduce the speed by for each step down in intensity (amount, not percentage.)
     const float SPEED_STEP = 0.25f;
-    private float intensity = 0;
+    private float intensity = 1;
 
     void Start()
     {
@@ -51,11 +51,12 @@ public class Portal : MonoBehaviour
         float startingIntensity = intensity;
         while (extraIntensity > 0.01f)
         {
-            UpdateAppearence(extraIntensity * 0.3f);
+            UpdateAppearence(extraIntensity * 0.6f);
             yield return null;
             progress += Time.deltaTime;
-            extraIntensity = Mathf.Pow(40, -progress * 3);
+            extraIntensity = Mathf.Pow(40, -progress * 2);
             intensity = Mathf.Lerp(startingIntensity + 1, startingIntensity, extraIntensity);
+            intensity = Mathf.Min(intensity, MAX_INTENSITY);
         }
         UpdateAppearence(0);
         yield break;
@@ -64,7 +65,7 @@ public class Portal : MonoBehaviour
     public IEnumerator Upgrade()
     {
         yield return UpgradeAnimation();
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.2f);
     }
 
     public int GetIntensity()

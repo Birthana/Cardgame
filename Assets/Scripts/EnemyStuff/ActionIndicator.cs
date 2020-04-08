@@ -10,22 +10,28 @@ public class ActionIndicator : MonoBehaviour
     public Sprite blockSprite;
     public TextMeshPro valueText;
 
+    private void Show()
+    {
+        iconRenderer.enabled = true;
+    }
+
     public void ShowAttack(int amount)
     {
+        Show();
         amount = Player.instance.ComputeDamageReceived(amount);
-        gameObject.SetActive(true);
         iconRenderer.sprite = attackSprite;
         valueText.text = "" + amount;
     }
 
     public void ShowBlock(int amount)
     {
-        gameObject.SetActive(true);
+        Show();
         iconRenderer.sprite = blockSprite;
         valueText.text = "" + amount;
     }
 
     public void Hide() {
-        gameObject.SetActive(false);
+        iconRenderer.enabled = false;
+        valueText.text = "";
     }
 }
