@@ -1811,13 +1811,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 100882aa44d5234eb8af95389fed24dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deckContents:
-  - card: {fileID: 11400000, guid: c084dac97bf7746c0b6a495c1ddbff6c, type: 2}
-    quantity: 10
-  - card: {fileID: 11400000, guid: 6ff8d9dafa4cef008a8d54baa586a0be, type: 2}
-    quantity: 10
-  - card: {fileID: 11400000, guid: 9c943839804ff44d4878e8acbb2b96c9, type: 2}
-    quantity: 5
+  everythingCopies: 5
+  deckContents: []
 --- !u!224 &1535724241 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5237962643239708937, guid: 21aeccc4ebf62534e8108b245ec92113,

@@ -78,7 +78,7 @@ public class HandAvatar : MonoBehaviour
             if (selected != null)
             {
                 int cardIndex = cardAvatars.IndexOf(selected);
-                selectionMode = cards[cardIndex].target;
+                selectionMode = cards[cardIndex].targetMode;
             }
             UpdateAvatarTransforms();
         }

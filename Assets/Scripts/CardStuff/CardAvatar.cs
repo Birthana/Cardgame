@@ -51,8 +51,8 @@ public class CardAvatar : MonoBehaviour
 
     private void DisplayCard()
     {
-        nameText.text = _displaying.cardName;
-        effectText.text = _displaying.cardEffectText;
+        nameText.text = _displaying.title;
+        effectText.text = _displaying.effectText;
         levelText.text = _displaying.level.ToString();
     }
 
