@@ -4,9 +4,15 @@ using UnityEngine;
 
 public class CreateMap : MonoBehaviour
 {
-    //Idea for connecting events:
-    //Connect paths from left to right. Progress by each Y coord of events.
-    //Prevent overlapping, if overlap or no empty events to connect, connect to same event.
+    //////////WORK IN PROGRESS////////////////
+
+    /*Create list of transforms and list of location types (maybe enum?) for
+     * mapLocations. for mapLines, do similar thing. May need to create another list for
+     * future components or component vals on each location, for example if there is a 
+     * location script with connect location variables to store how player progresses
+     * through the map. Currently, lists of GameObject do not work. */
+    private static List<GameObject> mapLocations;
+    private static List<GameObject> mapLines;
 
     private float SCREEN_HORIZONTAL_SPACING = 60f;  //Minimum spacing between sides of screen and events.
     private float SCREEN_VERTICAL_SPACING = 15f;  //Minimum spacing between top and bottom of screen and events.
@@ -26,23 +32,47 @@ public class CreateMap : MonoBehaviour
     private bool bottomPathsFilled = false;
     private bool topPathsFilled = false;
     private bool curPathsFilled = false;
+    private bool canCrossOver = true;   //Prevents overlapping lines.
+    private bool crossed = false;
 
+    //Type of objects to spawn.
     public GameObject enemyEncounter;
     public GameObject town;
+    public GameObject boss;
+    public GameObject start;
     public GameObject line;
     
     private void Start()
     {
-        otherPositions = new Vector3[numY][];
-        otherObjects = new GameObject[numY][];
-
-        CreateEndpoints();
-        Fill();
-        EnsureAngles();
-
-        for (int i = 0; i < maxPerY; i++)
+        if (mapLocations == null && mapLines == null)
         {
-            GeneratePath(i);
+            mapLocations = new List<GameObject>();
+            mapLines = new List<GameObject>();
+
+            otherPositions = new Vector3[numY][];
+            otherObjects = new GameObject[numY][];
+
+            //Create map points.
+            CreateEndpoints();
+            Fill();
+            EnsureAngles();
+
+            //Create lines between points.
+            for (int i = 0; i < maxPerY; i++)
+            {
+                //Only allows crossing if previous column did not cross. Prevents overlap.
+                if (crossed)
+                {
+                    canCrossOver = false;
+                }
+                GeneratePath(i);
+                canCrossOver = true;
+            }
+        }
+        else
+        {
+            Debug.Log(mapLocations[0].name);
+            //ReadMap();
         }
     }
 
@@ -51,13 +81,15 @@ public class CreateMap : MonoBehaviour
     {
         bottomPosition = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 2,
             SCREEN_VERTICAL_SPACING));
-        bottomObject = Instantiate(enemyEncounter, new Vector3(bottomPosition.x, 
+        bottomObject = Instantiate(start, new Vector3(bottomPosition.x, 
             bottomPosition.y, 0), Quaternion.identity);
+        mapLocations.Add(bottomObject);
 
         topPosition = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 2, 
             Screen.height - SCREEN_VERTICAL_SPACING));
-        topObject = Instantiate(enemyEncounter, new Vector3(topPosition.x, 
+        topObject = Instantiate(boss, new Vector3(topPosition.x, 
             topPosition.y, 0), Quaternion.identity);
+        mapLocations.Add(topObject);
     }
 
     //Fill screen with events.
@@ -89,46 +121,12 @@ public class CreateMap : MonoBehaviour
             {
                 horizontalSpacing = Vector3.Distance(leftMostPosition, rightMostPosition) / (numX + 1);
                 newY = bottomPosition.y + (i * verticalSpacing);
-                /*newPosition = Camera.main.ScreenToWorldPoint(new Vector3(
-                    Random.Range(SCREEN_HORIZONTAL_SPACING, Screen.width - SCREEN_HORIZONTAL_SPACING),
-                    0));*/
                 newX = leftMostPosition.x + (j * horizontalSpacing);
-                //newPosition = new Vector3(newX, newY, 0);
                 newPosition = Offset(new Vector3(newX, newY, 0));
-                /*newPosition.y = newY;
-                newPosition.x = newX;
-                newPosition.z = 0;*/
                 otherPositions[i - 1][j - 1] = newPosition;
                 otherObjects[i - 1][j - 1] = Instantiate(enemyEncounter, newPosition, Quaternion.identity);
             }
         }
-
-        /*
-        Vector3 newPosition;
-        Vector3 temp;
-
-        for (int i = 0; i < numToGenerate; i++)
-        {
-            int counter = 0;
-            do
-            {
-                temp = Camera.main.ScreenToWorldPoint(new Vector3(
-                    Random.Range(SCREEN_HORIZONTAL_SPACING, Screen.width - SCREEN_HORIZONTAL_SPACING),
-                    Random.Range(SCREEN_VERTICAL_SPACING + EVENT_SPACING, 
-                    Screen.height - SCREEN_VERTICAL_SPACING - EVENT_SPACING)));
-                newPosition = new Vector3(temp.x, temp.y, 0);
-
-                counter++;
-                if (counter > 10)
-                {
-                    Debug.LogError("Infinite loop?");
-                    break;
-                }
-            } while (!EnoughSpacing(newPosition));
-
-            otherPositions.Add(newPosition);
-            Instantiate(enemyEncounter, newPosition, Quaternion.identity);
-        }*/
     }
 
     //Ensures (and if necessary, corrects) angles between the bottomPositions and
@@ -224,6 +222,7 @@ public class CreateMap : MonoBehaviour
     {
         int startIndex = curIndex;
         float distMod = -1.75f;
+        int cross;
 
         curIndex = Mathf.Min(startIndex, otherPositions[0].Length - 1);
 
@@ -253,6 +252,68 @@ public class CreateMap : MonoBehaviour
         for (int i = 1; i < numY; i++)
         {
             curIndex = Mathf.Min(startIndex, otherPositions[i].Length - 1);
+
+            //Checks if it may cross over. If so, do so by chance.
+            if (canCrossOver)
+            {
+                cross = Random.Range(0, 5); //Adjust max to change chance of crossing over.
+                if (cross == 0)
+                {
+                    crossed = true;
+
+                    //Can only cross right.
+                    if (curIndex == 0 && otherPositions[i].Length > 1)
+                    {
+                        curVector = otherPositions[i][curIndex + 1] - curObject.transform.position;
+                        distance = curVector.magnitude;
+                        angle = Mathf.Atan2(curVector.y, curVector.x) * Mathf.Rad2Deg;
+
+                        curLine = Instantiate(line, new Vector3(
+                            curObject.transform.position.x + (curVector.x / 2),
+                            curObject.transform.position.y + (curVector.y / 2), 0),
+                            Quaternion.Euler(0f, 0f, angle));
+                        curLine.transform.localScale = new Vector3(distance + distMod, 1f, 1f);
+                    }
+                    //Can cross left or right.
+                    else if (curIndex > 0 && curIndex < otherPositions[i].Length - 1)
+                    {
+                        int op = Random.Range(0, 2);
+
+                        if (op == 0)
+                        {
+                            curVector = otherPositions[i][curIndex + 1] - curObject.transform.position;
+                        }
+                        else
+                        {
+                            curVector = otherPositions[i][curIndex - 1] - curObject.transform.position;
+                        }
+
+                        distance = curVector.magnitude;
+                        angle = Mathf.Atan2(curVector.y, curVector.x) * Mathf.Rad2Deg;
+
+                        curLine = Instantiate(line, new Vector3(
+                            curObject.transform.position.x + (curVector.x / 2),
+                            curObject.transform.position.y + (curVector.y / 2), 0),
+                            Quaternion.Euler(0f, 0f, angle));
+                        curLine.transform.localScale = new Vector3(distance + distMod, 1f, 1f);
+                    }
+                    //Can only cross left.
+                    else if(curIndex > 0 && curIndex == otherPositions[i].Length - 1
+                        && otherPositions[i].Length == otherPositions[i - 1].Length)
+                    {
+                        curVector = otherPositions[i][curIndex - 1] - curObject.transform.position;
+                        distance = curVector.magnitude;
+                        angle = Mathf.Atan2(curVector.y, curVector.x) * Mathf.Rad2Deg;
+
+                        curLine = Instantiate(line, new Vector3(
+                            curObject.transform.position.x + (curVector.x / 2),
+                            curObject.transform.position.y + (curVector.y / 2), 0),
+                            Quaternion.Euler(0f, 0f, angle));
+                        curLine.transform.localScale = new Vector3(distance + distMod, 1f, 1f);
+                    }
+                }
+            }
+            
             if (startIndex > otherPositions[i].Length - 1 
                 && otherPositions[i].Length - 1 == otherPositions[i - 1].Length - 1)
             {
@@ -296,34 +357,6 @@ public class CreateMap : MonoBehaviour
         }
     }
 
-    /*private void GeneratePath(int index)
-    {
-        int curIndex = 0;
-        //int curIndex = Random.Range(0, otherPositions[0].Length);
-        GameObject curObject;
-
-        //Generate line from bottomObject to curObject.
-        bottomObject.GetComponent<LineRenderer>().SetPosition(0, bottomPosition);
-        /*bottomObject.GetComponent<LineRenderer>().SetPosition(1,
-            otherPositions[0][curIndex]);
-        bottomObject.GetComponent<LineRenderer>().SetPosition(1, otherPositions[0][index]);
-        curObject = otherObjects[0][curIndex];
-
-        //Generate lines for filler objects.
-        for (int i = 1; i < numY; i++)
-        {
-            curObject.GetComponent<LineRenderer>().SetPosition(0, curObject.transform.position);
-            //curIndex = Random.Range(0, otherPositions[i].Length);
-            //curObject.GetComponent<LineRenderer>().SetPosition(1, otherPositions[i][curIndex]);
-            curObject.GetComponent<LineRenderer>().SetPosition(1, otherPositions[i][index]);
-            curObject = otherObjects[i][index];
-        }
-
-        //Generate line from curObject to topObject.
-        curObject.GetComponent<LineRenderer>().SetPosition(0, curObject.transform.position);
-        curObject.GetComponent<LineRenderer>().SetPosition(1, topPosition);
-    }*/
-
     private Vector3 Offset(Vector3 position)
     {
         Vector3 angleToOffset = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
@@ -335,26 +368,11 @@ public class CreateMap : MonoBehaviour
         return offsetPosition;
     }
 
-    //Returns true if a position has enough spacing from other already used.
-    /*private bool EnoughSpacing(Vector3 curPosition)
+    private void ReadMap()
     {
-        bool enough = true;
-
-        for (int i = 0; i < otherPositions.Count; i++)
+        for (int i = 0; i < mapLocations.Count; i++)
         {
-            if ((curPosition.x >= otherPositions[i].x - EVENT_SPACING
-                && curPosition.x <= otherPositions[i].x + EVENT_SPACING) ||
-                (curPosition.y >= otherPositions[i].y - EVENT_SPACING
-                && curPosition.y <= otherPositions[i].y + EVENT_SPACING))
-                {
-
-                }
-            if (Vector3.Distance(curPosition, otherPositions[i]) < EVENT_OFFSET)
-            {
-                enough = false;
-            }
+            Instantiate(mapLocations[i], mapLocations[i].transform.position, Quaternion.identity);
         }
-
-        return enough;
-    }*/
+    }
 }
