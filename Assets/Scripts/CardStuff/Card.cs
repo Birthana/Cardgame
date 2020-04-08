@@ -22,6 +22,8 @@ public abstract class Card : ScriptableObject
     public string effectText = "Does nothing.";
     [Tooltip("How the player should select targets for this card.")]
     public TargetMode targetMode = TargetMode.SpecificEnemy;
+    [Tooltip("The name of the artwork to display. It should be the name of a sprite located in Assets/Resources/CardArt.")]
+    public string art = "Placeholder";
 
     /// This method will play the effects of the card given a particular context.
     protected abstract IEnumerator Play(ActionContext context);

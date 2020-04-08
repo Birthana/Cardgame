@@ -545,6 +545,7 @@ MonoBehaviour:
   nameText: {fileID: 1491975986825923542}
   effectText: {fileID: 1491975985433753100}
   levelText: {fileID: 6396718379612889456}
+  art: {fileID: 1491975986038587518}
 --- !u!61 &1491975987232693331
 BoxCollider2D:
   m_ObjectHideFlags: 0

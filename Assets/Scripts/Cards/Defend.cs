@@ -17,6 +17,7 @@ public class Defend : Card
         level = 1;
         effectText = "Gain 6 block.";
         targetMode = TargetMode.Player;
+        art = "Defend";
     }
 
     protected override IEnumerator Play(ActionContext context)

@@ -18,6 +18,7 @@ public class #SCRIPTNAME# : Card
         level = 1; // Amount of energy required to play the card.
         effectText = ""; // Text shown on the lower half of the card.
         targetMode = TargetMode.Player; // What the card should target (player, enemy, all enemies, etc.)
+        art = "#SCRIPTNAME#"; // The name of a sprite in Assets/Resources/CardArt/
     }
 
     /// This is called when the card is played. Use it to apply the effects of the card. The
