@@ -185,6 +185,10 @@ public class BattleManager
                 DiscardCard(hand[index - 1]);
             }
 
+            if (friendlyPortal != null) {
+                yield return friendlyPortal.StartTurn();
+            }
+
             foreach (Enemy enemy in enemies)
             {
                 enemy.StartTurn();
@@ -195,6 +199,10 @@ public class BattleManager
             {
                 // This way, we wait for each enemy to do their thing before moving on.
                 yield return enemy.DoAttackWrapper();
+            }
+
+            if (enemyPortal != null) {
+                yield return enemyPortal.StartTurn();
             }
 
             // Return to player turn.

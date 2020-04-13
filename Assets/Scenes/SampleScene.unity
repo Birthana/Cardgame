@@ -1811,8 +1811,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 100882aa44d5234eb8af95389fed24dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  everythingCopies: 5
-  deckContents: []
+  everythingCopies: 1
+  deckContents:
+  - title: Call Power
+    quantity: 10
 --- !u!224 &1535724241 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5237962643239708937, guid: 21aeccc4ebf62534e8108b245ec92113,
