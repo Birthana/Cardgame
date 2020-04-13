@@ -59,6 +59,8 @@ public class CardAvatar : MonoBehaviour
         if (_displaying.magicCost == 0) {
             magicCostText.text = "";
             magicCostIcon.enabled = false;
+        } else if (_displaying.magicCost == Card.ANY_MAGIC_COST) {
+            magicCostText.text = "X";
         } else {
             magicCostText.text = "" + _displaying.magicCost;
         }

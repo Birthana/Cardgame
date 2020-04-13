@@ -13,6 +13,10 @@ public abstract class Card : ScriptableObject
         SpecificEnemy,
     }
 
+    /// Set magicCost to this value to allow the card to be used with any amount of magic. The 
+    /// card can change its effects based on how much magic actually gets used.
+    public const int ANY_MAGIC_COST = -1;
+
     [Tooltip("The title that will appear at the top of the card.")]
     public string title = "New Card";
     [Tooltip("How much energy the card costs to play.")]
@@ -33,9 +37,20 @@ public abstract class Card : ScriptableObject
     /// Plays the card against a list of targets.
     public IEnumerator Play(List<FieldEntity> targets)
     {
-        BattleManager.instance.SpendEnergy(level);
-        BattleManager.instance.friendlyPortal?.ReduceAmount(magicCost);
         ActionContext context = new ActionContext(targets);
+        BattleManager.instance.SpendEnergy(level);
+        if (magicCost == ANY_MAGIC_COST) {
+            int magicAmount = 0;
+            if (BattleManager.instance.friendlyPortal != null) {
+                magicAmount = BattleManager.instance.friendlyPortal.GetAmount();
+                BattleManager.instance.friendlyPortal.ReduceAmount(magicAmount);
+            }
+            Debug.Log(magicAmount);
+            context.magicUsed += magicAmount;
+        } else {
+            BattleManager.instance.friendlyPortal?.ReduceAmount(magicCost);
+            context.magicUsed += magicCost;
+        }
         Player.instance.ModifyActionContextAsSource(context);
         return Play(context);
     }
@@ -49,6 +64,6 @@ public abstract class Card : ScriptableObject
     public bool CanBePlayed() {
         return 
             BattleManager.instance?.energy >= level
-            && (magicCost == 0 || BattleManager.instance?.friendlyPortal?.GetAmount() >= magicCost);
+            && (magicCost <= 0 || BattleManager.instance?.friendlyPortal?.GetAmount() >= magicCost);
     }
 }
