@@ -17,6 +17,8 @@ public abstract class Card : ScriptableObject
     public string title = "New Card";
     [Tooltip("How much energy the card costs to play.")]
     public int level = 1;
+    [Tooltip("How much subjugation the card costs to play.")]
+    public int magicCost = 0;
     [TextArea]
     [Tooltip("The text that will be shown in the body (bottom half) of the card.")]
     public string effectText = "Does nothing.";
@@ -31,6 +33,8 @@ public abstract class Card : ScriptableObject
     /// Plays the card against a list of targets.
     public IEnumerator Play(List<FieldEntity> targets)
     {
+        BattleManager.instance.SpendEnergy(level);
+        BattleManager.instance.friendlyPortal?.ReduceAmount(magicCost);
         ActionContext context = new ActionContext(targets);
         Player.instance.ModifyActionContextAsSource(context);
         return Play(context);
@@ -40,5 +44,11 @@ public abstract class Card : ScriptableObject
     public IEnumerator Play(FieldEntity target)
     {
         return Play(new List<FieldEntity>(new FieldEntity[] { target }));
+    }
+
+    public bool CanBePlayed() {
+        return 
+            BattleManager.instance?.energy >= level
+            && (magicCost == 0 || BattleManager.instance?.friendlyPortal?.GetAmount() >= magicCost);
     }
 }

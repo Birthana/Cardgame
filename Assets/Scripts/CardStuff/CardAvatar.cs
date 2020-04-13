@@ -10,7 +10,8 @@ using TMPro;
 public class CardAvatar : MonoBehaviour
 {
     /// Text meshes for displaying the card name, its effects, and how much energy it costs.
-    public TextMeshPro nameText, effectText, levelText;
+    public TextMeshPro nameText, effectText, levelText, magicCostText;
+    public Renderer magicCostIcon;
     public SpriteRenderer art;
     /// OnHover is triggered when the mouse enters the card. OnBlur is triggered when the mouse
     /// leaves the card.
@@ -55,6 +56,12 @@ public class CardAvatar : MonoBehaviour
         nameText.text = _displaying.title;
         effectText.text = _displaying.effectText;
         levelText.text = _displaying.level.ToString();
+        if (_displaying.magicCost == 0) {
+            magicCostText.text = "";
+            magicCostIcon.enabled = false;
+        } else {
+            magicCostText.text = "" + _displaying.magicCost;
+        }
         art.sprite = Resources.Load<Sprite>("CardArt/" + _displaying.art);
     }
 
