@@ -239,12 +239,14 @@ MonoBehaviour:
   maxRows: 3
   minCols: 3
   maxCols: 4
-  enemyEncounter: {fileID: 6446999345921077196, guid: a8b345ab8b9b7d24992e4e3d556a61b8,
+  enemyEncounter: {fileID: 6446999345921077196, guid: 654173d208f6f6a4ca13c0f3964438f1,
     type: 3}
-  town: {fileID: 2895404605144634546, guid: 7d22a82c9edd4bc4f807840c47b830a5, type: 3}
-  boss: {fileID: 2895404605144634546, guid: 78ac9b0cb620ed94d9743bf43249ca05, type: 3}
-  start: {fileID: 2895404605144634546, guid: de7a1c58014697640b4e1cc1ae437dab, type: 3}
-  line: {fileID: 7919222841984809328, guid: 25b77d51c2f0d6a4890ef89afd8f6ed2, type: 3}
+  town: {fileID: 2895404605144634546, guid: c629b3c75a0c8ad4aad9227cc2049a9d, type: 3}
+  boss: {fileID: 2895404605144634546, guid: 9651e6f40199e0a49957ae7a06f90fd3, type: 3}
+  start: {fileID: 2895404605144634546, guid: 043f2b76e53375643a4fae3501bb9715, type: 3}
+  line: {fileID: 7919222841984809328, guid: 3a208ddb2296bba44bc597de4bc39c94, type: 3}
+  mapEvents: []
+  currentEvent: {fileID: 0}
 --- !u!4 &1955193479
 Transform:
   m_ObjectHideFlags: 0

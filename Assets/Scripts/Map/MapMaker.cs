@@ -18,16 +18,66 @@ public class MapMaker : MonoBehaviour
     public GameObject start;
     public GameObject line;
 
-    private List<GameObject> mapEvents;
-    private GameObject[][] otherEvents;
+    [SerializeField]
+    //private List<GameObject> mapEvents;
+    //private GameObject[][] otherEvents;
+
+    private List<Event> mapEvents;
+    private Event[][] otherEvents;
+
+    public GameObject currentMapIcon;
+    public Event currentEvent;
+
+    public Event selectedEvent;
 
     private void Start()
     {
-        mapEvents = new List<GameObject>();
-        otherEvents = new GameObject[maxRows][];
+        mapEvents = new List<Event>();
+        otherEvents = new Event[maxRows][];
         CreateEndPoints();
         Fill();
         ConnectEvents();
+    }
+
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            var mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit2D mouseHit = Physics2D.Raycast(mouseRay.origin, Vector2.zero);
+            if (mouseHit)
+            {
+                GameObject hitObject = mouseHit.collider.gameObject;
+                if (CheckIsEvent(hitObject))
+                {
+                    if (CheckIsConnected())
+                    {
+                        currentMapIcon = hitObject;
+                        currentEvent = selectedEvent;
+                        Debug.Log(currentEvent);
+                    }
+                }
+            }
+        }
+    }
+
+    public bool CheckIsEvent(GameObject hitObject)
+    {
+        bool result = false;
+        for (int i = 0; i < mapEvents.Count; i++)
+        {
+            if (hitObject.transform.position.Equals(mapEvents[i].position))
+            {
+                selectedEvent = mapEvents[i];
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    public bool CheckIsConnected()
+    {
+        return currentEvent.connectedEvents.Contains(selectedEvent.position);
     }
 
     public void CreateEndPoints()
@@ -37,15 +87,20 @@ public class MapMaker : MonoBehaviour
         GameObject bottom = Instantiate(start, this.transform);
         bottom.transform.localPosition = new Vector3(bottomPosition.x, 
             bottomPosition.y, 0);
+        Event startEvent = new Event(bottom.transform.localPosition);
 
         Vector3 topPosition = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 2,
             Screen.height - SCREEN_VERTICAL_SPACING));
         GameObject top = Instantiate(boss, this.transform);
         top.transform.localPosition = new Vector3(topPosition.x, 
             topPosition.y, 0);
+        Event bossEvent = new Event(top.transform.localPosition);
 
-        mapEvents.Add(bottom);
-        mapEvents.Add(top);
+        mapEvents.Add(startEvent);
+        mapEvents.Add(bossEvent);
+
+        currentMapIcon = bottom;
+        currentEvent = startEvent;
     }
 
     public void Fill()
@@ -53,7 +108,7 @@ public class MapMaker : MonoBehaviour
         for (int i = 0; i < maxRows; i++)
         {
             int numberOfCols = Random.Range(minCols, maxCols + 1);
-            otherEvents[i] = new GameObject[numberOfCols];
+            otherEvents[i] = new Event[numberOfCols];
             Vector3 leftMostPosition = Camera.main.ScreenToWorldPoint(new Vector3(
                 SCREEN_HORIZONTAL_SPACING, 0));
             Vector3 rightMostPosition = Camera.main.ScreenToWorldPoint(new Vector3(
@@ -71,15 +126,17 @@ public class MapMaker : MonoBehaviour
                     leftMostPosition.x + ((j + 1) * horizontalSpacing),
                     bottomPosition.y + ((i + 1) * verticalSpacing),
                     0);
-                otherEvents[i][j] = tempEvent;
+                Event newEvent = new Event(tempEvent.transform.localPosition);
+                otherEvents[i][j] = newEvent;
+                mapEvents.Add(newEvent);
             }
         }
     }
 
     public void ConnectEvents()
     {
-        ConnectEndEvents(mapEvents[0], 0);
-        ConnectEndEvents(mapEvents[1], otherEvents.Length - 1);
+        ConnectStartEvents(mapEvents[0], 0);
+        ConnectBossEvents(mapEvents[1], otherEvents.Length - 1);
 
         for (int i = 0; i < otherEvents.Length - 1; i++)
         {
@@ -90,6 +147,8 @@ public class MapMaker : MonoBehaviour
                 RandomConnectEvents(i, j);
             }
 
+            // If next row is longer than current row, connect all remaining cols 
+            // in the next row to the last col of current row.
             if (otherEvents[i].Length < otherEvents[i + 1].Length)
             {
                 for (int k = otherEvents[i].Length; k < otherEvents[i + 1].Length; k++)
@@ -100,11 +159,19 @@ public class MapMaker : MonoBehaviour
         }
     }
 
-    private void ConnectEndEvents(GameObject endPoint, int eventRow)
+    private void ConnectStartEvents(Event endPoint, int eventRow)
     {
         for (int i = 0; i < otherEvents[eventRow].Length; i++)
         {
             SpawnLine(endPoint, otherEvents[eventRow][i]);
+        }
+    }
+
+    private void ConnectBossEvents(Event endPoint, int eventRow)
+    {
+        for (int i = 0; i < otherEvents[eventRow].Length; i++)
+        {
+            SpawnLine(otherEvents[eventRow][i], endPoint);
         }
     }
 
@@ -136,16 +203,36 @@ public class MapMaker : MonoBehaviour
         }
     }
 
-    public void SpawnLine(GameObject a, GameObject b)
+    public void SpawnLine(Event a, Event b)
     {
-        Vector3 difference = b.transform.position - a.transform.position;
+        Vector3 difference = b.position - a.position;
         float angle = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
         Vector3 linePosition = new Vector3(
-            a.transform.position.x + (difference.x / 2),
-            a.transform.position.y + (difference.y / 2),
+            a.position.x + (difference.x / 2),
+            a.position.y + (difference.y / 2),
             0);
         GameObject newLine = Instantiate(line, linePosition, Quaternion.Euler(0f, 0f, angle));
         newLine.transform.localScale = new Vector3(difference.magnitude - 1.75f, 1f, 1f);
         newLine.transform.SetParent(this.transform);
+        a.connectedEvents.Add(b.position);
+    }
+
+    [System.Serializable]
+    public class Event
+    {
+        public Vector3 position;
+        public List<Vector3> connectedEvents;
+
+        public Event(Vector3 position)
+        {
+            this.position = position;
+            connectedEvents = new List<Vector3>();
+        }
+
+        public Event()
+        {
+            position = Vector3.zero;
+            connectedEvents = new List<Vector3>();
+        }
     }
 }
