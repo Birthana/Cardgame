@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MapMaker : MonoBehaviour
 {
@@ -18,10 +19,6 @@ public class MapMaker : MonoBehaviour
     public GameObject start;
     public GameObject line;
 
-    [SerializeField]
-    //private List<GameObject> mapEvents;
-    //private GameObject[][] otherEvents;
-
     private List<Event> mapEvents;
     private Event[][] otherEvents;
 
@@ -32,11 +29,22 @@ public class MapMaker : MonoBehaviour
 
     private void Start()
     {
-        mapEvents = new List<Event>();
-        otherEvents = new Event[maxRows][];
-        CreateEndPoints();
-        Fill();
-        ConnectEvents();
+        if (MapInfo.instance.GetMapEvents() == null)
+        {
+            mapEvents = new List<Event>();
+            otherEvents = new Event[maxRows][];
+            CreateEndPoints();
+            Fill();
+            ConnectEvents();
+        }
+        else
+        {
+            mapEvents = MapInfo.instance.GetMapEvents();
+            otherEvents = MapInfo.instance.GetOtherEvents();
+            currentMapIcon = MapInfo.instance.GetCurrentMapIcon();
+            currentEvent = MapInfo.instance.GetCurrentEvent();
+            RespawnEvents();
+        }
     }
 
     private void Update()
@@ -54,11 +62,46 @@ public class MapMaker : MonoBehaviour
                     {
                         currentMapIcon = hitObject;
                         currentEvent = selectedEvent;
-                        Debug.Log(currentEvent);
+                        MapInfo.instance.SetMapInfo(mapEvents, otherEvents, currentMapIcon, currentEvent);
+                        SceneManager.LoadScene(4);
                     }
                 }
             }
         }
+    }
+
+    public void RespawnEvents()
+    {
+        GameObject newEvent = Instantiate(start, this.transform);
+        newEvent.transform.localPosition = mapEvents[0].position;
+        foreach (Vector3 linePosition in mapEvents[0].connectedEvents)
+        {
+            RespawnLine(mapEvents[0].position, linePosition);
+        }
+        newEvent = Instantiate(boss, this.transform);
+        newEvent.transform.localPosition = mapEvents[1].position;
+        for (int i = 2; i < mapEvents.Count; i++)
+        {
+            newEvent = Instantiate(enemyEncounter, this.transform);
+            newEvent.transform.localPosition = mapEvents[i].position;
+            foreach (Vector3 linePosition in mapEvents[i].connectedEvents)
+            {
+                RespawnLine(mapEvents[i].position, linePosition);
+            }
+        }
+    }
+
+    public void RespawnLine(Vector3 a, Vector3 b)
+    {
+        Vector3 difference = b - a;
+        float angle = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
+        Vector3 linePosition = new Vector3(
+            a.x + (difference.x / 2),
+            a.y + (difference.y / 2),
+            0);
+        GameObject newLine = Instantiate(line, linePosition, Quaternion.Euler(0f, 0f, angle));
+        newLine.transform.localScale = new Vector3(difference.magnitude - 1.75f, 1f, 1f);
+        newLine.transform.SetParent(this.transform);
     }
 
     public bool CheckIsEvent(GameObject hitObject)
@@ -215,24 +258,5 @@ public class MapMaker : MonoBehaviour
         newLine.transform.localScale = new Vector3(difference.magnitude - 1.75f, 1f, 1f);
         newLine.transform.SetParent(this.transform);
         a.connectedEvents.Add(b.position);
-    }
-
-    [System.Serializable]
-    public class Event
-    {
-        public Vector3 position;
-        public List<Vector3> connectedEvents;
-
-        public Event(Vector3 position)
-        {
-            this.position = position;
-            connectedEvents = new List<Vector3>();
-        }
-
-        public Event()
-        {
-            position = Vector3.zero;
-            connectedEvents = new List<Vector3>();
-        }
     }
 }
