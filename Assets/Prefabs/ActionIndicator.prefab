@@ -46,10 +46,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   iconRenderer: {fileID: 8930799149502683738}
-  attackSprite: {fileID: -5557152493264487120, guid: d58ad32b967b329e69a6b419c2d6beb1,
-    type: 3}
-  blockSprite: {fileID: -2628592134270824824, guid: d58ad32b967b329e69a6b419c2d6beb1,
-    type: 3}
+  attackSprite: {fileID: 21300000, guid: 6cffa213bae7e1eceb5f946edb9de7a5, type: 3}
+  blockSprite: {fileID: 21300000, guid: 9098beb78a1c04f7e9e364fc25d1e71b, type: 3}
   valueText: {fileID: 244968403258975722}
 --- !u!1 &1209490869659402719
 GameObject:
@@ -121,8 +119,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -5557152493264487120, guid: d58ad32b967b329e69a6b419c2d6beb1,
-    type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6cffa213bae7e1eceb5f946edb9de7a5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
