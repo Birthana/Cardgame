@@ -1,378 +1,293 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CreateMap : MonoBehaviour
 {
-    //////////WORK IN PROGRESS////////////////
+    public float SCREEN_HORIZONTAL_SPACING = 60f;
+    public float SCREEN_VERTICAL_SPACING = 15f;
+    public float EVENT_OFFSET = 25f;
 
-    /*Create list of transforms and list of location types (maybe enum?) for
-     * mapLocations. for mapLines, do similar thing. May need to create another list for
-     * future components or component vals on each location, for example if there is a 
-     * location script with connect location variables to store how player progresses
-     * through the map. Currently, lists of GameObject do not work. */
-    private static List<GameObject> mapLocations;
-    private static List<GameObject> mapLines;
+    public int maxRows;
+    public int minCols;
+    public int maxCols;
 
-    private float SCREEN_HORIZONTAL_SPACING = 60f;  //Minimum spacing between sides of screen and events.
-    private float SCREEN_VERTICAL_SPACING = 15f;  //Minimum spacing between top and bottom of screen and events.
-    private float EVENT_OFFSET = 25f;  //Maximum offset applied to each event.
-
-    private Vector3 bottomPosition;
-    private Vector3 topPosition;
-    private Vector3[][] otherPositions;  //Array of other positions. otherPositions[Y Positions][X Positions]
-    //Each correspond with above declared position variables.
-    private GameObject bottomObject;
-    private GameObject topObject;
-    private GameObject[][] otherObjects;
-
-    private int numY = 3;   //Number of Y coords to generate and spawn an event at.
-    private int minPerY = 3;    //Minimum number of events to generate for every Y coord used.
-    private int maxPerY = 4;    //Maximum number of events to generate for every Y coord used.
-    private bool bottomPathsFilled = false;
-    private bool topPathsFilled = false;
-    private bool curPathsFilled = false;
-    private bool canCrossOver = true;   //Prevents overlapping lines.
-    private bool crossed = false;
-
-    //Type of objects to spawn.
     public GameObject enemyEncounter;
     public GameObject town;
     public GameObject boss;
     public GameObject start;
     public GameObject line;
-    
+
+    private List<MapEvent> mapEvents;
+    private MapEvent[][] otherEvents;
+
+    public GameObject currentMapIcon;
+    public MapEvent currentEvent;
+
+    public MapEvent selectedEvent;
+
     private void Start()
     {
-        if (mapLocations == null && mapLines == null)
+        if (MapStatus.instance.GetMapEvents() == null)
         {
-            mapLocations = new List<GameObject>();
-            mapLines = new List<GameObject>();
-
-            otherPositions = new Vector3[numY][];
-            otherObjects = new GameObject[numY][];
-
-            //Create map points.
-            CreateEndpoints();
+            mapEvents = new List<MapEvent>();
+            otherEvents = new MapEvent[maxRows][];
+            CreateEndPoints();
             Fill();
-            EnsureAngles();
-
-            //Create lines between points.
-            for (int i = 0; i < maxPerY; i++)
-            {
-                //Only allows crossing if previous column did not cross. Prevents overlap.
-                if (crossed)
-                {
-                    canCrossOver = false;
-                }
-                GeneratePath(i);
-                canCrossOver = true;
-            }
+            ConnectEvents();
         }
         else
         {
-            Debug.Log(mapLocations[0].name);
-            //ReadMap();
+            mapEvents = MapStatus.instance.GetMapEvents();
+            otherEvents = MapStatus.instance.GetOtherEvents();
+            currentMapIcon = MapStatus.instance.GetCurrentMapIcon();
+            currentEvent = MapStatus.instance.GetCurrentEvent();
+            RespawnEvents();
+        }
+        ActivateAnim();
+    }
+
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            var mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit2D mouseHit = Physics2D.Raycast(mouseRay.origin, Vector2.zero);
+            if (mouseHit)
+            {
+                GameObject hitObject = mouseHit.collider.gameObject;
+                if (CheckIsEvent(hitObject))
+                {
+                    if (CheckIsConnected())
+                    {
+                        currentMapIcon = hitObject;
+                        currentEvent = selectedEvent;
+                        MapStatus.instance.SetMapStatus(mapEvents, otherEvents, currentMapIcon, currentEvent);
+                        SceneManager.LoadScene("MapTempTest");
+                    }
+                }
+            }
         }
     }
 
-    //Create top and bottom events.
-    private void CreateEndpoints()
+    public void RespawnEvents()
     {
-        bottomPosition = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 2,
+        GameObject newEvent = Instantiate(start, this.transform);
+        newEvent.transform.localPosition = mapEvents[0].position;
+        foreach (Vector3 linePosition in mapEvents[0].connectedPositions)
+        {
+            RespawnLine(mapEvents[0].position, linePosition);
+        }
+        newEvent = Instantiate(boss, this.transform);
+        newEvent.transform.localPosition = mapEvents[1].position;
+        for (int i = 2; i < mapEvents.Count; i++)
+        {
+            if (mapEvents[i].type == MapEvent.Type.EnemyEncounter)
+            {
+                newEvent = Instantiate(enemyEncounter, this.transform);
+            }
+            else if (mapEvents[i].type == MapEvent.Type.Town)
+            {
+                newEvent = Instantiate(town, this.transform);
+            }
+
+            newEvent.transform.localPosition = mapEvents[i].position;
+            foreach (Vector3 linePosition in mapEvents[i].connectedPositions)
+            {
+                RespawnLine(mapEvents[i].position, linePosition);
+            }
+        }
+    }
+
+    public void RespawnLine(Vector3 a, Vector3 b)
+    {
+        Vector3 difference = b - a;
+        float angle = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
+        Vector3 linePosition = new Vector3(
+            a.x + (difference.x / 2),
+            a.y + (difference.y / 2),
+            0);
+        GameObject newLine = Instantiate(line, linePosition, Quaternion.Euler(0f, 0f, angle));
+        newLine.transform.localScale = new Vector3(difference.magnitude - 1.75f, 1f, 1f);
+        newLine.transform.SetParent(this.transform);
+    }
+
+    public bool CheckIsEvent(GameObject hitObject)
+    {
+        bool result = false;
+        for (int i = 0; i < mapEvents.Count; i++)
+        {
+            if (hitObject.transform.position.Equals(mapEvents[i].position))
+            {
+                selectedEvent = mapEvents[i];
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    public bool CheckIsConnected()
+    {
+        return currentEvent.connectedPositions.Contains(selectedEvent.position);
+    }
+
+    public void CreateEndPoints()
+    {
+        Vector3 bottomPosition = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 2,
             SCREEN_VERTICAL_SPACING));
-        bottomObject = Instantiate(start, new Vector3(bottomPosition.x, 
-            bottomPosition.y, 0), Quaternion.identity);
-        mapLocations.Add(bottomObject);
+        GameObject bottom = Instantiate(start, this.transform);
+        bottom.transform.localPosition = new Vector3(bottomPosition.x,
+            bottomPosition.y, 0);
+        MapEvent startEvent = new MapEvent(bottom.transform.localPosition, bottom);
 
-        topPosition = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 2, 
+        Vector3 topPosition = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 2,
             Screen.height - SCREEN_VERTICAL_SPACING));
-        topObject = Instantiate(boss, new Vector3(topPosition.x, 
-            topPosition.y, 0), Quaternion.identity);
-        mapLocations.Add(topObject);
+        GameObject top = Instantiate(boss, this.transform);
+        top.transform.localPosition = new Vector3(topPosition.x,
+            topPosition.y, 0);
+        MapEvent bossEvent = new MapEvent(top.transform.localPosition, top);
+
+        mapEvents.Add(startEvent);
+        mapEvents.Add(bossEvent);
+
+        currentMapIcon = bottom;
+        currentEvent = startEvent;
     }
 
-    //Fill screen with events.
-    private void Fill()
+    public void Fill()
     {
-        Vector3 newPosition;
-        float newY;
-        float newX;
-        float verticalSpacing = (topPosition.y - bottomPosition.y) / (numY + 1);
-
-        //Used to calculate horizontal spacing between events.
-        Vector3 leftMostPosition = Camera.main.ScreenToWorldPoint(new Vector3(
-            SCREEN_HORIZONTAL_SPACING, 0));
-        Vector3 rightMostPosition = Camera.main.ScreenToWorldPoint(new Vector3(
-            Screen.width - SCREEN_HORIZONTAL_SPACING, 0));
-        float horizontalSpacing;
-
-        int numX;
-
-        for (int i = 1; i <= numY; i++)
+        for (int i = 0; i < maxRows; i++)
         {
-            numX = Random.Range(minPerY, maxPerY + 1);
-
-            //Creates jagged array based on number of X vals used.
-            otherPositions[i - 1] = new Vector3[numX];
-            otherObjects[i - 1] = new GameObject[numX];
-
-            for (int j = 1; j <= numX; j++)
+            int numberOfCols = Random.Range(minCols, maxCols + 1);
+            otherEvents[i] = new MapEvent[numberOfCols];
+            Vector3 leftMostPosition = Camera.main.ScreenToWorldPoint(new Vector3(
+                SCREEN_HORIZONTAL_SPACING, 0));
+            Vector3 rightMostPosition = Camera.main.ScreenToWorldPoint(new Vector3(
+                Screen.width - SCREEN_HORIZONTAL_SPACING, 0));
+            Vector3 bottomPosition = Camera.main.ScreenToWorldPoint(new Vector3(
+                Screen.width / 2, SCREEN_VERTICAL_SPACING));
+            Vector3 topPosition = Camera.main.ScreenToWorldPoint(new Vector3(
+                Screen.width / 2, Screen.height - SCREEN_VERTICAL_SPACING));
+            float horizontalSpacing = Vector3.Distance(leftMostPosition, rightMostPosition) / (numberOfCols + 1);
+            float verticalSpacing = (topPosition.y - bottomPosition.y) / (maxRows + 1);
+            for (int j = 0; j < numberOfCols; j++)
             {
-                horizontalSpacing = Vector3.Distance(leftMostPosition, rightMostPosition) / (numX + 1);
-                newY = bottomPosition.y + (i * verticalSpacing);
-                newX = leftMostPosition.x + (j * horizontalSpacing);
-                newPosition = Offset(new Vector3(newX, newY, 0));
-                otherPositions[i - 1][j - 1] = newPosition;
-                otherObjects[i - 1][j - 1] = Instantiate(enemyEncounter, newPosition, Quaternion.identity);
+                GameObject tempEvent;
+                MapEvent.Type type;
+
+                if (i > 0 && Random.Range(0, 6) == 0)
+                {
+                    tempEvent = Instantiate(town, this.transform);
+                    type = MapEvent.Type.Town;
+                }
+                else
+                {
+                    tempEvent = Instantiate(enemyEncounter, this.transform);
+                    type = MapEvent.Type.EnemyEncounter;
+                }
+                
+                tempEvent.transform.localPosition = new Vector3(
+                    leftMostPosition.x + ((j + 1) * horizontalSpacing),
+                    bottomPosition.y + ((i + 1) * verticalSpacing),
+                    0);
+                MapEvent newEvent = new MapEvent(tempEvent.transform.localPosition, type, tempEvent);
+                otherEvents[i][j] = newEvent;
+                mapEvents.Add(newEvent);
             }
         }
     }
 
-    //Ensures (and if necessary, corrects) angles between the bottomPositions and
-    //the first row of map locations are not too close, which would cause paths
-    //to be too close together. Does same thing for top position and last row of
-    //map locations.
-    private void EnsureAngles()
+    public void ConnectEvents()
     {
-        Vector3 curVector;
-        float curAngle;
-        Vector3 vectorToCompare;
-        float angleToCompare;
+        ConnectStartEvents(mapEvents[0], 0);
+        ConnectBossEvents(mapEvents[1], otherEvents.Length - 1);
 
-        //////////////Check bottomPositions angles.
-        for (int i = 0; i < otherPositions[0].Length; i++)
+        for (int i = 0; i < otherEvents.Length - 1; i++)
         {
-            curVector = otherPositions[0][i] - bottomPosition;
-            curAngle = Mathf.Atan2(curVector.y, curVector.x) * Mathf.Rad2Deg;
-
-            for (int j = i + 1; j < otherPositions[0].Length; j++)
+            for (int j = 0; j < otherEvents[i].Length; j++)
             {
-                vectorToCompare = otherPositions[0][j] - bottomPosition;
-                angleToCompare = Mathf.Atan2(vectorToCompare.y, vectorToCompare.x) * Mathf.Rad2Deg;
+                int nextIndex = Mathf.Min(j, otherEvents[i + 1].Length - 1);
+                SpawnLine(otherEvents[i][j], otherEvents[i + 1][nextIndex]);
+                RandomConnectEvents(i, j);
+            }
 
-                if (Mathf.Abs(curAngle - angleToCompare) < 10f)
+            // If next row is longer than current row, connect all remaining cols 
+            // in the next row to the last col of current row.
+            if (otherEvents[i].Length < otherEvents[i + 1].Length)
+            {
+                for (int k = otherEvents[i].Length; k < otherEvents[i + 1].Length; k++)
                 {
-                    Vector3 newPosition = otherObjects[0][j].transform.position + new Vector3(0f, 3f, 0f);
-
-                    otherObjects[0][j].transform.position = newPosition;
-                    otherPositions[0][j] = newPosition;
+                    SpawnLine(otherEvents[i][otherEvents[i].Length - 1], otherEvents[i + 1][k]);
                 }
             }
         }
+    }
 
-        curVector = otherPositions[0][otherPositions[0].Length - 1] - bottomPosition;
-        curAngle = Mathf.Atan2(curVector.y, curVector.x) * Mathf.Rad2Deg;
-        vectorToCompare = otherPositions[0][otherPositions[0].Length - 2] - bottomPosition;
-        angleToCompare = Mathf.Atan2(vectorToCompare.y, vectorToCompare.x) * Mathf.Rad2Deg;
-
-        if (Mathf.Abs(curAngle - angleToCompare) < 10f)
+    private void ConnectStartEvents(MapEvent endPoint, int eventRow)
+    {
+        for (int i = 0; i < otherEvents[eventRow].Length; i++)
         {
-            Vector3 newPosition = otherObjects[0][otherPositions[0].Length - 1].transform.position 
-                + new Vector3(0f, 3f, 0f);
-
-            otherObjects[0][otherPositions[0].Length - 1].transform.position = newPosition;
-            otherPositions[0][otherPositions[0].Length - 1] = newPosition;
+            SpawnLine(endPoint, otherEvents[eventRow][i]);
         }
-        //////////////
+    }
 
-        //////////////Check topPositions angles.
-        for (int i = 0; i < otherPositions[otherPositions.Length - 1].Length; i++)
+    private void ConnectBossEvents(MapEvent endPoint, int eventRow)
+    {
+        for (int i = 0; i < otherEvents[eventRow].Length; i++)
         {
-            curVector = otherPositions[otherPositions.Length - 1][i] - topPosition;
-            curAngle = Mathf.Atan2(curVector.y, curVector.x) * Mathf.Rad2Deg;
+            SpawnLine(otherEvents[eventRow][i], endPoint);
+        }
+    }
 
-            for (int j = i + 1; j < otherPositions[otherPositions.Length - 1].Length; j++)
+    public void RandomConnectEvents(int row, int col)
+    {
+        int rng = Random.Range(0, 5);
+        if (rng == 0)
+        {
+            if (col == 0 && otherEvents[row + 1].Length > 1)
             {
-                vectorToCompare = otherPositions[otherPositions.Length - 1][j] - topPosition;
-                angleToCompare = Mathf.Atan2(vectorToCompare.y, vectorToCompare.x) * Mathf.Rad2Deg;
-
-                if (Mathf.Abs(curAngle - angleToCompare) < 10f)
+                SpawnLine(otherEvents[row][col], otherEvents[row + 1][col + 1]);
+            }
+            else if (col > 0 && col < otherEvents[row + 1].Length - 1)
+            {
+                rng = Random.Range(0, 2);
+                if (rng == 0)
                 {
-                    Vector3 newPosition = otherObjects[otherPositions.Length - 1][j].transform.position
-                        - new Vector3(0f, 3f, 0f);
-
-                    otherObjects[otherPositions.Length - 1][j].transform.position = newPosition;
-                    otherPositions[otherPositions.Length - 1][j] = newPosition;
+                    SpawnLine(otherEvents[row][col], otherEvents[row + 1][col + 1]);
+                }
+                else
+                {
+                    SpawnLine(otherEvents[row][col], otherEvents[row + 1][col - 1]);
                 }
             }
-        }
-
-        curVector = otherPositions[otherPositions.Length - 1][otherPositions[otherPositions.Length - 1].Length - 1] 
-            - topPosition;
-        curAngle = Mathf.Atan2(curVector.y, curVector.x) * Mathf.Rad2Deg;
-        vectorToCompare = otherPositions[otherPositions.Length - 1][otherPositions[otherPositions.Length - 1].Length - 2]
-            - topPosition;
-        angleToCompare = Mathf.Atan2(vectorToCompare.y, vectorToCompare.x) * Mathf.Rad2Deg;
-
-        if (Mathf.Abs(curAngle - angleToCompare) < 10f)
-        {
-            Vector3 newPosition = 
-                otherObjects[otherPositions.Length - 1][otherPositions[otherPositions.Length - 1].Length - 1].transform.position
-                - new Vector3(0f, 3f, 0f);
-
-            otherObjects[otherPositions.Length - 1][otherPositions[otherPositions.Length - 1].Length - 1].transform.position = 
-                newPosition;
-            otherPositions[otherPositions.Length - 1][otherPositions[otherPositions.Length - 1].Length - 1] = newPosition;
-        }
-        ////////////
-    }
-
-    private void GeneratePath(int curIndex)
-    {
-        int startIndex = curIndex;
-        float distMod = -1.75f;
-        int cross;
-
-        curIndex = Mathf.Min(startIndex, otherPositions[0].Length - 1);
-
-        GameObject curObject;
-        GameObject curLine;
-        Vector3 curVector = otherPositions[0][curIndex] - bottomPosition;
-        float distance = curVector.magnitude;
-        float angle = Mathf.Atan2(curVector.y, curVector.x) * Mathf.Rad2Deg;
-
-        if (startIndex > otherPositions[0].Length - 1)
-        {
-            bottomPathsFilled = true;
-        }
-
-        //Generates paths by spawning line in middle of two events, then scaling up.
-        //Generate line from bottomObject to curObject.
-        if (!bottomPathsFilled)
-        {
-            curLine = Instantiate(line, new Vector3(
-                bottomPosition.x + (curVector.x / 2),
-                bottomPosition.y + (curVector.y / 2), 0), Quaternion.Euler(0f, 0f, angle));
-            curLine.transform.localScale = new Vector3(distance + distMod, 1f, 1f);
-        }
-        curObject = otherObjects[0][curIndex];
-
-        //Generate lines for filler objects.
-        for (int i = 1; i < numY; i++)
-        {
-            curIndex = Mathf.Min(startIndex, otherPositions[i].Length - 1);
-
-            //Checks if it may cross over. If so, do so by chance.
-            if (canCrossOver)
+            else if (col > 0 && col == otherEvents[row + 1].Length - 1)
             {
-                cross = Random.Range(0, 5); //Adjust max to change chance of crossing over.
-                if (cross == 0)
-                {
-                    crossed = true;
-
-                    //Can only cross right.
-                    if (curIndex == 0 && otherPositions[i].Length > 1)
-                    {
-                        curVector = otherPositions[i][curIndex + 1] - curObject.transform.position;
-                        distance = curVector.magnitude;
-                        angle = Mathf.Atan2(curVector.y, curVector.x) * Mathf.Rad2Deg;
-
-                        curLine = Instantiate(line, new Vector3(
-                            curObject.transform.position.x + (curVector.x / 2),
-                            curObject.transform.position.y + (curVector.y / 2), 0),
-                            Quaternion.Euler(0f, 0f, angle));
-                        curLine.transform.localScale = new Vector3(distance + distMod, 1f, 1f);
-                    }
-                    //Can cross left or right.
-                    else if (curIndex > 0 && curIndex < otherPositions[i].Length - 1)
-                    {
-                        int op = Random.Range(0, 2);
-
-                        if (op == 0)
-                        {
-                            curVector = otherPositions[i][curIndex + 1] - curObject.transform.position;
-                        }
-                        else
-                        {
-                            curVector = otherPositions[i][curIndex - 1] - curObject.transform.position;
-                        }
-
-                        distance = curVector.magnitude;
-                        angle = Mathf.Atan2(curVector.y, curVector.x) * Mathf.Rad2Deg;
-
-                        curLine = Instantiate(line, new Vector3(
-                            curObject.transform.position.x + (curVector.x / 2),
-                            curObject.transform.position.y + (curVector.y / 2), 0),
-                            Quaternion.Euler(0f, 0f, angle));
-                        curLine.transform.localScale = new Vector3(distance + distMod, 1f, 1f);
-                    }
-                    //Can only cross left.
-                    else if(curIndex > 0 && curIndex == otherPositions[i].Length - 1
-                        && otherPositions[i].Length == otherPositions[i - 1].Length)
-                    {
-                        curVector = otherPositions[i][curIndex - 1] - curObject.transform.position;
-                        distance = curVector.magnitude;
-                        angle = Mathf.Atan2(curVector.y, curVector.x) * Mathf.Rad2Deg;
-
-                        curLine = Instantiate(line, new Vector3(
-                            curObject.transform.position.x + (curVector.x / 2),
-                            curObject.transform.position.y + (curVector.y / 2), 0),
-                            Quaternion.Euler(0f, 0f, angle));
-                        curLine.transform.localScale = new Vector3(distance + distMod, 1f, 1f);
-                    }
-                }
+                SpawnLine(otherEvents[row][col], otherEvents[row + 1][col - 1]);
             }
-            
-            if (startIndex > otherPositions[i].Length - 1 
-                && otherPositions[i].Length - 1 == otherPositions[i - 1].Length - 1)
-            {
-                curPathsFilled = true;
-            }
-            else
-            {
-                curPathsFilled = false;
-            }
-            curVector = otherPositions[i][curIndex] - curObject.transform.position;
-            distance = curVector.magnitude;
-            angle = Mathf.Atan2(curVector.y, curVector.x) * Mathf.Rad2Deg;
-
-            if (!curPathsFilled)
-            {
-                curLine = Instantiate(line, new Vector3(
-                    curObject.transform.position.x + (curVector.x / 2),
-                    curObject.transform.position.y + (curVector.y / 2), 0), Quaternion.Euler(0f, 0f, angle));
-                curLine.transform.localScale = new Vector3(distance + distMod, 1f, 1f);
-            }
-            curObject = otherObjects[i][curIndex];
-        }
-
-        curIndex = Mathf.Min(startIndex, otherPositions[numY - 1].Length - 1);
-        if (startIndex > otherPositions[numY - 1].Length - 1)
-        {
-            topPathsFilled = true;
-        }
-
-        //Generate line from curObject to topObject.
-        if (!topPathsFilled)
-        {
-            curVector = topPosition - curObject.transform.position;
-            distance = curVector.magnitude;
-            angle = Mathf.Atan2(curVector.y, curVector.x) * Mathf.Rad2Deg;
-
-            curLine = Instantiate(line, new Vector3(
-                curObject.transform.position.x + (curVector.x / 2),
-                curObject.transform.position.y + (curVector.y / 2), 0), Quaternion.Euler(0f, 0f, angle));
-            curLine.transform.localScale = new Vector3(distance + distMod, 1f, 1f);
         }
     }
 
-    private Vector3 Offset(Vector3 position)
+    public void SpawnLine(MapEvent a, MapEvent b)
     {
-        Vector3 angleToOffset = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0);
-        angleToOffset.Normalize();
-        Vector3 convertedPosition = Camera.main.WorldToScreenPoint(position);
-        Vector3 offsetPosition = Camera.main.ScreenToWorldPoint(
-            convertedPosition + (Random.Range(0f, EVENT_OFFSET) * angleToOffset));
-
-        return offsetPosition;
+        Vector3 difference = b.position - a.position;
+        float angle = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
+        Vector3 linePosition = new Vector3(
+            a.position.x + (difference.x / 2),
+            a.position.y + (difference.y / 2),
+            0);
+        GameObject newLine = Instantiate(line, linePosition, Quaternion.Euler(0f, 0f, angle));
+        newLine.transform.localScale = new Vector3(difference.magnitude - 1.75f, 1f, 1f);
+        newLine.transform.SetParent(this.transform);
+        a.connectedPositions.Add(b.position);
+        a.connectedEvents.Add(b);
     }
 
-    private void ReadMap()
+    private void ActivateAnim()
     {
-        for (int i = 0; i < mapLocations.Count; i++)
+        foreach (MapEvent connected in currentEvent.connectedEvents)
         {
-            Instantiate(mapLocations[i], mapLocations[i].transform.position, Quaternion.identity);
+            //connected.correspondingObject.GetComponent<Animation>().
         }
     }
 }
