@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class MapEvent
 {
-    public enum Type { EnemyEncounter, Town, Other};
+    public enum Type { EnemyEncounter, Town, Boss, Other};
 
     public Type type;
     public Vector3 position;
     public GameObject correspondingObject;
+    public string sceneToLoad;
     public List<Vector3> connectedPositions;
     public List<MapEvent> connectedEvents;
 
@@ -17,8 +18,22 @@ public class MapEvent
         this.position = position;
         this.type = type;
         this.correspondingObject = correspondingObject;
+        
         connectedPositions = new List<Vector3>();
         connectedEvents = new List<MapEvent>();
+
+        if (type == Type.EnemyEncounter)
+        {
+            sceneToLoad = "EnemyEncounter";
+        }
+        else if (type == Type.Town)
+        {
+            sceneToLoad = "Town";
+        }
+        else if (type == Type.Boss)
+        {
+            sceneToLoad = "Boss";
+        }
     }
 
     public MapEvent(Vector3 position, GameObject correspondingObject)
@@ -26,6 +41,7 @@ public class MapEvent
         type = Type.Other;
         this.position = position;
         this.correspondingObject = correspondingObject;
+        sceneToLoad = null;
         connectedPositions = new List<Vector3>();
         connectedEvents = new List<MapEvent>();
     }
@@ -35,6 +51,7 @@ public class MapEvent
         type = Type.Other;
         position = Vector3.zero;
         correspondingObject = null;
+        sceneToLoad = null;
         connectedPositions = new List<Vector3>();
         connectedEvents = new List<MapEvent>();
     }

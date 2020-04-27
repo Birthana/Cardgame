@@ -64,7 +64,7 @@ public class CreateMap : MonoBehaviour
                         currentMapIcon = hitObject;
                         currentEvent = selectedEvent;
                         MapStatus.instance.SetMapStatus(mapEvents, otherEvents, currentMapIcon, currentEvent);
-                        SceneManager.LoadScene("MapTempTest");
+                        SceneManager.LoadScene(selectedEvent.sceneToLoad);
                     }
                 }
             }
@@ -149,7 +149,7 @@ public class CreateMap : MonoBehaviour
         GameObject top = Instantiate(boss, this.transform);
         top.transform.localPosition = new Vector3(topPosition.x,
             topPosition.y, 0);
-        MapEvent bossEvent = new MapEvent(top.transform.localPosition, top);
+        MapEvent bossEvent = new MapEvent(top.transform.localPosition, MapEvent.Type.Boss, top);
 
         mapEvents.Add(startEvent);
         mapEvents.Add(bossEvent);
