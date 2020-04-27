@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6364055019762431541}
   - component: {fileID: 2544794700438205712}
   - component: {fileID: 6647203793877312462}
+  - component: {fileID: -3884803017053848778}
   m_Layer: 0
   m_Name: Town
   m_TagString: Untagged
@@ -108,3 +109,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.16, y: 0.16}
   m_EdgeRadius: 0
+--- !u!111 &-3884803017053848778
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2895404605144634546}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 3983a9ac972f2c24b909d5b03f24588c, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 3983a9ac972f2c24b909d5b03f24588c, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0

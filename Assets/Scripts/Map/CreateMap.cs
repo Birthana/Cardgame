@@ -75,12 +75,14 @@ public class CreateMap : MonoBehaviour
     {
         GameObject newEvent = Instantiate(start, this.transform);
         newEvent.transform.localPosition = mapEvents[0].position;
+        mapEvents[0].correspondingObject = newEvent;
         foreach (Vector3 linePosition in mapEvents[0].connectedPositions)
         {
             RespawnLine(mapEvents[0].position, linePosition);
         }
         newEvent = Instantiate(boss, this.transform);
         newEvent.transform.localPosition = mapEvents[1].position;
+        mapEvents[1].correspondingObject = newEvent;
         for (int i = 2; i < mapEvents.Count; i++)
         {
             if (mapEvents[i].type == MapEvent.Type.EnemyEncounter)
@@ -93,6 +95,7 @@ public class CreateMap : MonoBehaviour
             }
 
             newEvent.transform.localPosition = mapEvents[i].position;
+            mapEvents[i].correspondingObject = newEvent;
             foreach (Vector3 linePosition in mapEvents[i].connectedPositions)
             {
                 RespawnLine(mapEvents[i].position, linePosition);
@@ -287,7 +290,7 @@ public class CreateMap : MonoBehaviour
     {
         foreach (MapEvent connected in currentEvent.connectedEvents)
         {
-            //connected.correspondingObject.GetComponent<Animation>().
+            connected.correspondingObject.GetComponent<Animation>().Play();
         }
     }
 }
