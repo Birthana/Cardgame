@@ -29,6 +29,7 @@ public class MapMaker : MonoBehaviour
 
     private void Start()
     {
+        this.transform.position = Vector3.zero;
         if (MapInfo.instance.GetMapEvents() == null)
         {
             mapEvents = new List<Event>();
