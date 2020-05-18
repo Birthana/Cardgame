@@ -28,7 +28,7 @@ public class MapEvent
         }
         else if (type == Type.Town)
         {
-            sceneToLoad = "Town";
+            sceneToLoad = "Town2";
         }
         else if (type == Type.Boss)
         {

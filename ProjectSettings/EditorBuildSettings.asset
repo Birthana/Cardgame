@@ -24,8 +24,11 @@ EditorBuildSettings:
     path: Assets/Scenes/EnemyEncounter.unity
     guid: 98675727758069d4cac2bfd3566c2e64
   - enabled: 1
-    path: Assets/Scenes/Town.unity
-    guid: 9a0934594cc7d304c8c97b7aeeb394eb
+    path: Assets/Scenes/Town2.unity
+    guid: 864fdfbecb9cd784e9edffeeb2421eb7
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/Scenes/Boss.unity
     guid: 1730790508adb954b98bd66a47dea60f
