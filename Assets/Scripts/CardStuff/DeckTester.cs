@@ -6,11 +6,13 @@ using UnityEngine;
 /// starting a new battle.
 public class DeckTester : MonoBehaviour
 {
+    [Tooltip("This value indicates how many times to add every card in existence to the player's hand.")]
+    public int everythingCopies = 0;
     [System.Serializable]
     public class CardCreateSpec
     {
-        [Tooltip("The card to add to the deck.")]
-        public Card card;
+        [Tooltip("The name of the card to add to the deck.")]
+        public string title;
         [Tooltip("Number of times to add the card to the deck.")]
         public int quantity;
     }
@@ -21,11 +23,35 @@ public class DeckTester : MonoBehaviour
     void Start()
     {
         Deck deck = Deck.instance;
+        foreach (Card card in CardIndex.instance.GetCards())
+        {
+            for (int index = 0; index < everythingCopies; index++)
+            {  
+                deck.Add(Instantiate(card));
+            }
+        }
         foreach (var request in deckContents)
         {
-            for (int index = 0; index < request.quantity; index++)
+            Card template = null;
+            foreach (Card card in CardIndex.instance.GetCards())
             {
-                deck.Add(Instantiate(request.card));
+                if (card.title == request.title)
+                {
+                    template = card;
+                    break;
+                }
+            }
+
+            if (template == null)
+            {
+                Debug.LogError("Error in deck tester: There is no such card with the title \"" + request.title + "\"!");
+            }
+            else
+            {
+                for (int index = 0; index < request.quantity; index++)
+                {
+                    deck.Add(Instantiate(template));
+                }
             }
         }
         BattleManager.instance.NewBattle();

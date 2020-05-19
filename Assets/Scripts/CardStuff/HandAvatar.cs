@@ -21,11 +21,6 @@ public class HandAvatar : MonoBehaviour
 
     private List<Card> cards = new List<Card>();
     private List<CardAvatar> cardAvatars = new List<CardAvatar>();
-    // Emphasized = a card that is rendered larger because the user is hovering over it.
-    // waitingToBeEmphasized = a card that will be emphasized if the currently emphasized card is
-    // deemphasized. This allows the emphasized card to visually overlap other cards without causing
-    // logic problems.
-    private CardAvatar emphasized, waitingToBeEmphasized;
     // Selected = a card the user has clicked on and is about to play. The user can put it back by
     // clicking on it again or by clicking on another card to select.
     private CardAvatar selected = null;
@@ -49,17 +44,33 @@ public class HandAvatar : MonoBehaviour
         BattleManager.instance.OnDiscard -= RemoveCardAvatar;
     }
 
+    private ComponentClass GetUnderCursor<ComponentClass>()
+    {
+        var mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit2D mouseHit = Physics2D.Raycast(mouseRay.origin, Vector2.zero);
+        if (!mouseHit)
+        {
+            return default(ComponentClass);
+        }
+        return mouseHit.collider.gameObject.GetComponent<ComponentClass>();
+    }
+
+    private CardAvatar GetHovered() {
+        return GetUnderCursor<CardAvatar>();
+    }
+
     void Update()
     {
         if (Input.GetMouseButtonDown(0) && !ignoreInteraction)
         {
+            var hovered = GetHovered();
             // The user clicked the mouse while a card was already selected.
             if (selected != null)
             {
                 // The user clicked the selected card, deselect it.
-                if (selected == emphasized) Deselect(selected);
+                if (selected == hovered) Deselect(selected);
                 // The user clicked on another card. Select that one instead.
-                else if (emphasized != null) Select(emphasized);
+                else if (hovered != null) Select(hovered);
                 else
                 {
                     // The user clicked outside the hand avatar. Try to play the card. If the
@@ -68,20 +79,20 @@ public class HandAvatar : MonoBehaviour
                     if (!success) Deselect(selected);
                 }
             }
-            else if (emphasized != null)
+            else if (hovered != null)
             {
                 // If a card is emphasized (enlarged because hovered), then select it.
-                Select(emphasized);
+                Select(hovered);
             }
 
             // Update the current selection mode based on how the selected card targets things.
             if (selected != null)
             {
                 int cardIndex = cardAvatars.IndexOf(selected);
-                selectionMode = cards[cardIndex].target;
+                selectionMode = cards[cardIndex].targetMode;
             }
-            UpdateAvatarTransforms();
         }
+        UpdateAvatarTransforms();
     }
 
     /// This sets and unsets ignoreInteraction based on the provided coroutine / iterator, setting
@@ -91,6 +102,11 @@ public class HandAvatar : MonoBehaviour
         ignoreInteraction = true;
         yield return animCoroutine;
         ignoreInteraction = false;
+        foreach (Enemy enemy in BattleManager.instance.enemies)
+        {
+            // The card just played may have affected the numbers on an enemy's action indicator.
+            enemy.UpdateActionIndicatorWrapper();
+        }
         yield break;
     }
 
@@ -133,7 +149,6 @@ public class HandAvatar : MonoBehaviour
 
         if (success)
         {
-            BattleManager.instance.SpendEnergy(card.level);
             BattleManager.instance.DiscardCard(card);
         }
         return success;
@@ -149,7 +164,7 @@ public class HandAvatar : MonoBehaviour
         }
         cards.Clear();
         cardAvatars.Clear();
-        (emphasized, waitingToBeEmphasized, selected) = (null, null, null);
+        selected = null;
     }
 
     /// Creates a new avatar to be the visual representation of the given card.
@@ -157,8 +172,6 @@ public class HandAvatar : MonoBehaviour
     {
         CardAvatar avatar = Instantiate(cardAvatarPrefab, this.transform);
         avatar.displaying = forCard;
-        avatar.OnHover += Emphasize;
-        avatar.OnBlur += Deemphasize;
         cards.Add(forCard);
         cardAvatars.Add(avatar);
         UpdateAvatarTransforms();
@@ -169,41 +182,11 @@ public class HandAvatar : MonoBehaviour
     {
         int index = cards.IndexOf(forCard);
         if (index == -1) return;
-        // This doesn't have any negative effects if the card wasn't emphasized in the first place.
-        Deemphasize(cardAvatars[index]);
         Deselect(cardAvatars[index]);
         Destroy(cardAvatars[index].gameObject);
         cards.RemoveAt(index);
         cardAvatars.RemoveAt(index);
         UpdateAvatarTransforms();
-    }
-
-    /// Emphasizes a card to make it show up bigger.
-    private void Emphasize(CardAvatar avatar)
-    {
-        if (emphasized == null)
-        {
-            emphasized = avatar;
-            UpdateAvatarTransforms();
-        }
-        else
-        {
-            waitingToBeEmphasized = avatar;
-        }
-    }
-
-    /// Deemphasizes a card to return it to its normal size.
-    private void Deemphasize(CardAvatar avatar)
-    {
-        if (avatar == emphasized)
-        {
-            emphasized = waitingToBeEmphasized;
-            UpdateAvatarTransforms();
-        }
-        else if (avatar == waitingToBeEmphasized)
-        {
-            waitingToBeEmphasized = null;
-        }
     }
 
     /// Select a card as about to be played. In this state, if the user clicks on a valid target,
@@ -212,13 +195,13 @@ public class HandAvatar : MonoBehaviour
     {
         int index = cardAvatars.IndexOf(avatar);
         int energyRequired = cards[index].level;
-        if (BattleManager.instance.energy >= energyRequired)
+        if (cards[index].CanBePlayed())
         {
             selected = avatar;
         }
         else
         {
-            Debug.Log("TODO: Tell the player they don't have enough energy to play the card.");
+            Debug.Log("TODO: Tell the player they can't play the card for whatever reason.");
         }
     }
 
@@ -229,15 +212,16 @@ public class HandAvatar : MonoBehaviour
         {
             selected = null;
         }
-        // This helps mute a minor visual hiccup.
-        Deemphasize(avatar);
     }
 
     /// Reposition all the card avatars, taking into account their number as well as which one
     /// is emphasized or selected (if any.)
     private void UpdateAvatarTransforms()
     {
-        int emphasizedIndex = cardAvatars.IndexOf(emphasized);
+        int emphasizedIndex = cardAvatars.IndexOf(GetHovered());
+        if (emphasizedIndex >= 0 && !cards[emphasizedIndex].CanBePlayed()) {
+            emphasizedIndex = -1;
+        }
         int selectedIndex = cardAvatars.IndexOf(selected);
         // Handles both cases of `emphasized` being null and of being something not in the list.
         bool somethingIsEmphasized = emphasizedIndex > -1;
@@ -265,18 +249,6 @@ public class HandAvatar : MonoBehaviour
                 {
                     // Selected card should appear dead-center.
                     transformAmount = 0.0f;
-                }
-            }
-            else if (somethingIsEmphasized && !ignoreInteraction)
-            {
-                // Make all the other cards give the emphasized card a little more space.
-                if (index < emphasizedIndex)
-                {
-                    transformAmount -= 0.2f;
-                }
-                else if (index > emphasizedIndex)
-                {
-                    transformAmount += 0.2f;
                 }
             }
 

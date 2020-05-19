@@ -9,6 +9,7 @@ public class ActionContext
 {
     public int damageBoost = 0;
     public float damageMultiplier = 1;
+    public int magicUsed = 0;
     private List<FieldEntity> _targets;
     public List<FieldEntity> targets { get => _targets; }
 

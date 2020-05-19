@@ -24,6 +24,10 @@ public class BattleManager
     private List<Enemy> _enemies = new List<Enemy>();
     /// A list of all enemies currently in the battle.
     public List<Enemy> enemies { get => _enemies; }
+    private Portal _friendlyPortal = null, _enemyPortal = null;
+    public Portal friendlyPortal { get => _friendlyPortal; }
+    public Portal enemyPortal { get => _enemyPortal; }
+
     private List<Card> drawPile = new List<Card>();
     private List<Card> hand = new List<Card>();
     private List<Card> discardPile = new List<Card>();
@@ -41,6 +45,8 @@ public class BattleManager
     public event Action OnShuffle;
     /// Invoked when the amount of energy the player has is changed.
     public event Action OnEnergyChange;
+    /// Invoked when a field entity or portal is added or removed.
+    public event Action OnFieldChange;
 
     private bool triggerEndTurn = false;
 
@@ -49,6 +55,7 @@ public class BattleManager
     {
         _enemies.Add(enemy);
         enemy.UpdateActionIndicatorWrapper();
+        OnFieldChange?.Invoke();
     }
 
     /// Removes an enemy from the battle. This method is automatically called by Enemy.
@@ -59,6 +66,26 @@ public class BattleManager
         {
             Debug.Log("Battle complete! TODO: Do anything");
         }
+        OnFieldChange?.Invoke();
+    }
+
+    public void SetFriendlyPortal(Portal portal)
+    {
+        _friendlyPortal = portal;
+        OnFieldChange?.Invoke();
+    }
+
+    public void SetEnemyPortal(Portal portal)
+    {
+        _enemyPortal = portal;
+        OnFieldChange?.Invoke();
+    }
+
+    public void RemovePortal(Portal portal)
+    {
+        if (_friendlyPortal == portal) _friendlyPortal = null;
+        if (_enemyPortal == portal) _enemyPortal = null;
+        OnFieldChange?.Invoke();
     }
 
     private void MoveDiscardToDraw()
@@ -158,9 +185,13 @@ public class BattleManager
                 DiscardCard(hand[index - 1]);
             }
 
+            if (friendlyPortal != null) {
+                yield return friendlyPortal.StartTurn();
+            }
+
             foreach (Enemy enemy in enemies)
             {
-                enemy.ClearBlock();
+                enemy.StartTurn();
             }
 
             // Do enemy attacks.
@@ -170,17 +201,21 @@ public class BattleManager
                 yield return enemy.DoAttackWrapper();
             }
 
-            // Return to player turn.
-            foreach (Enemy enemy in enemies)
-            {
-                enemy.UpdateActionIndicatorWrapper();
+            if (enemyPortal != null) {
+                yield return enemyPortal.StartTurn();
             }
+
+            // Return to player turn.
             Player player = Player.instance;
-            player.ClearBlock();
+            player.StartTurn();
             _energy = player.maxEnergy;
             OnEnergyChange?.Invoke();
             // TODO: Animation.
             DrawCards(5);
+            foreach (Enemy enemy in enemies)
+            {
+                enemy.UpdateActionIndicatorWrapper();
+            }
             triggerEndTurn = false;
         }
     }
