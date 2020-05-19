@@ -43,7 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09342cfa635d1dbbeac19e8578284ee7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardAvatarPrefab: {fileID: 2519713381551346388, guid: ac4ecf33c3fd9b940bea7b4a0aef52eb,
+  cardAvatarPrefab: {fileID: 2519713381551346388, guid: f491d2fdcdb8fa54a8dfc602ca849d2d,
     type: 3}
   linePrefab: {fileID: 0}
   CARD_WIDTH: 19
