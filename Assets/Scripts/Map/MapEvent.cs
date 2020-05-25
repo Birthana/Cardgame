@@ -24,7 +24,7 @@ public class MapEvent
 
         if (type == Type.EnemyEncounter)
         {
-            sceneToLoad = "EnemyEncounter";
+            sceneToLoad = "SampleScene";
         }
         else if (type == Type.Town)
         {

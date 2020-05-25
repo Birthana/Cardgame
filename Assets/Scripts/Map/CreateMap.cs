@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class CreateMap : MonoBehaviour
 {
     public float SCREEN_HORIZONTAL_SPACING = 60f;
-    public float SCREEN_VERTICAL_SPACING = 15f;
+    public float SCREEN_VERTICAL_SPACING = 30f;
     public float EVENT_OFFSET = 25f;
 
     public int maxRows;

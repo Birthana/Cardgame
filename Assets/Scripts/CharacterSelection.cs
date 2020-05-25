@@ -49,6 +49,7 @@ public class CharacterSelection : MonoBehaviour
     {
         Debug.Log(string.Format("Character {0}:{1} has been chosen", selectedCharacterIndex, characterList[selectedCharacterIndex].characterName));
         SceneManager.LoadScene("MapExample");
+        //SceneManager.LoadSceneAsync("PlayerUI", LoadSceneMode.Additive);
     }
 
     private void UpdateCharacterSelectionUI() 

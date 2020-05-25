@@ -248,7 +248,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SCREEN_HORIZONTAL_SPACING: 60
-  SCREEN_VERTICAL_SPACING: 15
+  SCREEN_VERTICAL_SPACING: 30
   EVENT_OFFSET: 25
   maxRows: 3
   minCols: 3

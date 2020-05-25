@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// Manages everything that happens during a battle: keeping track of enemies, keeping track of 
 /// the player's draw, hand, and discard piles, and keeping track of the player's energy.
@@ -64,7 +65,9 @@ public class BattleManager
         _enemies.Remove(enemy);
         if (_enemies.Count == 0)
         {
-            Debug.Log("Battle complete! TODO: Do anything");
+            //Debug.Log("Battle complete! TODO: Do anything");
+            // Change scene, add gold/money, and draft a card.
+            SceneManager.LoadScene("MapExample");
         }
         OnFieldChange?.Invoke();
     }

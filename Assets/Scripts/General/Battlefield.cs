@@ -18,7 +18,10 @@ public class Battlefield : MonoBehaviour
     {
         if (_instance == null)
         {
+            Debug.Log("New Instance.");
             _instance = this;
+            if (this)
+                Debug.Log("Exists.");
         }
         else
         {
@@ -31,6 +34,7 @@ public class Battlefield : MonoBehaviour
 
     void OnDisable()
     {
+        Debug.Log("Delete Instance.");
         _instance = null;
     }
 
