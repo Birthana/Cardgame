@@ -18,10 +18,7 @@ public class Battlefield : MonoBehaviour
     {
         if (_instance == null)
         {
-            Debug.Log("New Instance.");
             _instance = this;
-            if (this)
-                Debug.Log("Exists.");
         }
         else
         {
@@ -34,7 +31,7 @@ public class Battlefield : MonoBehaviour
 
     void OnDisable()
     {
-        Debug.Log("Delete Instance.");
+        BattleManager.instance.OnFieldChange -= DoLayout;
         _instance = null;
     }
 
@@ -45,7 +42,7 @@ public class Battlefield : MonoBehaviour
         foreach (Enemy enemy in BattleManager.instance.enemies)
         {
             Vector3 oldScale = enemy.transform.localScale;
-            enemy.transform.parent = this.transform;
+            enemy.transform.parent = gameObject.transform;
             enemy.transform.localScale = oldScale;
 
             enemy.transform.localPosition = Vector3.zero + Vector3.right * (currentOffset + enemy.WIDTH / 2);
