@@ -1835,6 +1835,8 @@ MonoBehaviour:
     quantity: 10
   - title: Black Hole
     quantity: 10
+  - title: ShieldSlam
+    quantity: 10
 --- !u!1001 &1657899175
 PrefabInstance:
   m_ObjectHideFlags: 0

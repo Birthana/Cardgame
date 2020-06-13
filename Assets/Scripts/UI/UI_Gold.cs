@@ -1,0 +1,24 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using TMPro;
+
+public class UI_Gold : MonoBehaviour
+{
+    public TextMeshProUGUI goldText;
+
+    private void OnEnable()
+    {
+        ResourceManager.OnGoldChange += ChangeUI;
+    }
+
+    private void OnDisable()
+    {
+        ResourceManager.OnGoldChange -= ChangeUI;
+    }
+
+    public void ChangeUI(int currentGold, int maxGold)
+    {
+        goldText.text = currentGold + " / " + maxGold;
+    }
+}

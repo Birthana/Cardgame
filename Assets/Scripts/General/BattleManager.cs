@@ -67,7 +67,7 @@ public class BattleManager
         {
             //Debug.Log("Battle complete! TODO: Do anything");
             // Change scene, add gold/money, and draft a card.
-            SceneManager.LoadScene("MapExample");
+            //SceneManager.LoadScene("MapExample");
         }
         OnFieldChange?.Invoke();
     }
