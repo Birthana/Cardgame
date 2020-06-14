@@ -1829,14 +1829,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 100882aa44d5234eb8af95389fed24dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  everythingCopies: 4
+  everythingCopies: 0
   deckContents:
+  - title: Attack
+    quantity: 5
+  - title: Defend
+    quantity: 5
   - title: Call Power
-    quantity: 10
-  - title: Black Hole
-    quantity: 10
-  - title: ShieldSlam
-    quantity: 10
+    quantity: 1
+  - title: Bolt
+    quantity: 1
 --- !u!1001 &1657899175
 PrefabInstance:
   m_ObjectHideFlags: 0

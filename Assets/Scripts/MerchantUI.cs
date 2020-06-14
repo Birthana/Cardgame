@@ -4,86 +4,54 @@ using UnityEngine;
 
 public class MerchantUI : MonoBehaviour
 {
+    //Change Card Avatar prefab with a cost tmpro text box.
     public float CARD_SPACING;
+    public CardAvatar cardAvatarPrefab;
 
-    [SerializeField]
-    private List<MerchantCard> cardsForSell;
-
-    private void Start()
+    private void OnEnable()
     {
-        DisplayUI();
+        Merchant.OnWaresChange += DisplayUI;
     }
 
-    private void Update()
+    private void OnDisable()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            var mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit2D mouseHit = Physics2D.Raycast(mouseRay.origin, Vector2.zero);
-            if (mouseHit)
-            {
-                CardAvatar selectedCard = mouseHit.collider.gameObject.GetComponent<CardAvatar>();
-                if (selectedCard != null)
-                {
-                    MerchantCard cardToBuy = GetMerchantCard(selectedCard);
-                    if (Currency.GetCurrency() >= cardToBuy.cost)
-                    {
-                        Deck.instance.Add(cardToBuy.card.displaying);
-                        Currency.SubtractCurrency(cardToBuy.cost);
-                        Debug.Log(Currency.GetCurrency());
+        Merchant.OnWaresChange -= DisplayUI;
+    }
 
-                        cardsForSell.Remove(cardToBuy);
-                        Destroy(cardToBuy.card.gameObject);
-                        DisplayUI();
-                    }
-                    else
-                    {
-                        Debug.Log("Not enough currency.");
-                    }
-                }
-            }
+    public void DisplayUI(List<Merchant.MerchantCard> cards)
+    {
+        List<CardAvatar> cardsInShop = new List<CardAvatar>();
+        foreach (Merchant.MerchantCard card in cards)
+        {
+            CardAvatar newCard = Instantiate(cardAvatarPrefab, this.transform);
+            newCard.displaying = GetCardFromName(card.cardName);
+            cardsInShop.Add(newCard);
         }
-    }
 
-    public MerchantCard GetMerchantCard(CardAvatar card)
-    {
-        MerchantCard result = cardsForSell[0];
-        for (int i = 0; i < cardsForSell.Count; i++)
+        for (int i = 0; i < cardsInShop.Count; i++)
         {
-            if (card.Equals(cardsForSell[i].card))
-            {
-                result = cardsForSell[i];
-            }
-        }
-        return result;
-    }
-
-    public void AddToMerchantShop(MerchantCard card)
-    {
-        cardsForSell.Add(card);
-        DisplayUI();
-    }
-
-    public void DisplayUI()
-    {
-        for (int i = 0; i < cardsForSell.Count; i++)
-        {
-            float transformAmount = ((float)i) - ((float)cardsForSell.Count - 1) / 2;
+            float transformAmount = ((float)i) - ((float)cardsInShop.Count - 1) / 2;
             float angle = transformAmount * 3.0f;
             Vector3 position = new Vector3(
                 Mathf.Sin(angle * Mathf.Deg2Rad),
                 0,
                 0
                 ) * CARD_SPACING;
-            cardsForSell[i].card.transform.localPosition = position;
-            //cardsForSell[i].transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
+            cardsInShop[i].transform.localPosition = position;
         }
     }
 
-    [System.Serializable]
-    public class MerchantCard
+    public Card GetCardFromName(string cardName)
     {
-        public CardAvatar card;
-        public int cost;
+        Card result = null;
+        foreach (Card card in CardIndex.instance.GetCards())
+        {
+            if (card.title == cardName)
+            {
+                result = card;
+                break;
+            }
+        }
+        return result;
     }
 }

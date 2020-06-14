@@ -45,6 +45,11 @@ public class ResourceManager
         OnHealthChange?.Invoke(currentHealth, MAX_HEALTH);
     }
 
+    public int GetGold()
+    {
+        return currentGold;
+    }
+
     public void AddGold(int gold)
     {
         currentGold += gold;

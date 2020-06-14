@@ -14,7 +14,7 @@ public class ShieldSlam : Card
 
     public ShieldSlam()
     {
-        title = "ShieldSlam"; // Name of the card.
+        title = "Shield Slam"; // Name of the card.
         level = 1; // Amount of energy required to play the card.
         effectText = "Deal 9 damage.\nReduce incoming damage by 25%."; // Text shown on the lower half of the card.
         targetMode = TargetMode.SpecificEnemy; // What the card should target (player, enemy, all enemies, etc.)

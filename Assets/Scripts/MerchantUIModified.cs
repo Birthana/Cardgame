@@ -7,11 +7,13 @@ public class MerchantUIModified : MonoBehaviour
     public float CARD_SPACING;
     public int numCardsToSell;
     public float costVariancePercent;   //Card cost will vary by up to this percent.
+    public CardAvatar cardAvatarPrefab;
 
     [SerializeField]
-    private List<MerchantCard> cardsForSell;
-    private List<MerchantCard> chosenCards;
-    private List<MerchantCard> leftoverCards;
+    private List<MerchantCard> cardsForSell = new List<MerchantCard>();
+
+    private List<MerchantCard> chosenCards = new List<MerchantCard>();
+    private List<MerchantCard> leftoverCards = new List<MerchantCard>();
 
     private void Start()
     {
@@ -34,12 +36,12 @@ public class MerchantUIModified : MonoBehaviour
                     MerchantCard cardToBuy = GetMerchantCard(selectedCard);
                     if (Currency.GetCurrency() >= cardToBuy.actualCost)
                     {
-                        Deck.instance.Add(cardToBuy.card.displaying);
+                        Deck.instance.Add(Instantiate(cardToBuy.card));
                         Currency.SubtractCurrency(cardToBuy.actualCost);
                         Debug.Log(Currency.GetCurrency());
 
                         chosenCards.Remove(cardToBuy);
-                        Destroy(cardToBuy.card.gameObject);
+                        //Destroy(cardToBuy.card);
                         DisplayUI();
                     }
                     else
@@ -55,22 +57,9 @@ public class MerchantUIModified : MonoBehaviour
     {
         int curIndex;
         List<int> chosenIndices = new List<int>();
-
-        chosenCards = new List<MerchantCard>();
-        leftoverCards = new List<MerchantCard>();
-
-        numCardsToSell = Mathf.Clamp(numCardsToSell, 0, cardsForSell.Count);
-
-        //Populate leftoverCards.
-        for (int i = 0; i < cardsForSell.Count; i++)
-        {
-            leftoverCards.Add(cardsForSell[i]);
-        }
-
-        //Choose cards.
+        leftoverCards = cardsForSell;
         for (int i = 0; i < numCardsToSell; i++)
         {
-            //Search for unique index (prevents repeating cards).
             do
             {
                 curIndex = Random.Range(0, cardsForSell.Count);
@@ -130,7 +119,7 @@ public class MerchantUIModified : MonoBehaviour
         //Gets rid of cards not chosen.
         for (int i = 0; i < leftoverCards.Count; i++)
         {
-            leftoverCards[i].card.gameObject.SetActive(false);
+            //leftoverCards[i].card.gameObject.SetActive(false);
         }
 
         for (int i = 0; i < chosenCards.Count; i++)
@@ -142,7 +131,7 @@ public class MerchantUIModified : MonoBehaviour
                 0,
                 0
                 ) * CARD_SPACING;
-            chosenCards[i].card.transform.localPosition = position;
+            //chosenCards[i].card.transform.localPosition = position;
             //cardsForSell[i].transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
         }
     }
@@ -150,71 +139,10 @@ public class MerchantUIModified : MonoBehaviour
     [System.Serializable]
     public class MerchantCard
     {
-        public CardAvatar card;
+        public Card card;
         public int cost;
 
         [HideInInspector]
         public int actualCost;
     }
 }
-
-
-
-
-/* Old Code 
-public class MerchantUIModified : MonoBehaviour
-{
-    public float CARD_SPACING;
-
-    [SerializeField]
-    private List<CardAvatar> cardsForSell;
-    public Card cardInfoPlaceholder;    //Used for testing purposes.
-
-    private void Start()
-    {
-        DisplayUI();
-    }
-
-    public void AddToMerchantShop(CardAvatar card)
-    {
-        cardsForSell.Add(card);
-    }
-
-    public void DisplayUI()
-    {
-        for (int i = 0; i < cardsForSell.Count; i++)
-        {
-            float transformAmount = ((float)i) - ((float)cardsForSell.Count - 1) / 2;
-            float angle = transformAmount * 3.0f;
-            Vector3 position = new Vector3(
-                Mathf.Sin(angle * Mathf.Deg2Rad),
-                0,
-                0
-                ) * CARD_SPACING;
-            cardsForSell[i].transform.localPosition = position;
-            //cardsForSell[i].transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
-
-            cardsForSell[i].displaying = cardInfoPlaceholder;   //Temporary, for testing purposes.
-
-            cardsForSell[i].gameObject.AddComponent<BuyItem>();
-            SetBuyAttributes(cardsForSell[i]);
-        }
-    }
-
-    private void SetBuyAttributes(CardAvatar curCard)
-    {
-        //Idea: we could have a nested class in a style similar to Josh's DeckTester class.
-        //Then, we could set a cost for each item added to be bought, instead of needing to check
-        //the name. This class would be the type for the cardsForSell list instead of the
-        //current CardAvatar. (This would require some tweaking in the code to work properly.)
-        switch (curCard.displaying.cardName)
-        {
-            case "Damage10":
-                curCard.GetComponent<BuyItem>().SetCost(10);
-                break;
-            default:
-                Debug.Log("Card has no set cost.");
-                break;
-        }
-    }
-}   */
