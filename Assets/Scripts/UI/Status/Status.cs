@@ -5,6 +5,16 @@ using TMPro;
 
 public class Status : MonoBehaviour
 {
-    public Sprite statusImage { get; set; }
-    public TextMeshPro turnCount { get; set; }
+    public SpriteRenderer statusImage;
+    public TextMeshPro turnCount;
+
+    public void SetStatusImage(Sprite sprite)
+    {
+        statusImage.sprite = sprite;
+    }
+
+    public void SetTurnCount(int turns)
+    {
+        turnCount.text = "" + turns;
+    }
 }

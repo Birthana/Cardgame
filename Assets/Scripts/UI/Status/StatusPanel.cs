@@ -26,8 +26,8 @@ public class StatusPanel : MonoBehaviour
     public void ChangeStatusUI(StatusType statusType, int turns)
     {
         Status newStatus = Instantiate(statusPrefab, this.transform);
-        newStatus.statusImage = statusSprites[(int)statusType];
-        newStatus.turnCount.text = "" + turns;
+        newStatus.SetStatusImage(statusSprites[(int)statusType]);
+        newStatus.SetTurnCount(turns);
         DisplayStatusUI();
     }
 
