@@ -20,16 +20,20 @@ public class FieldEntity : MonoBehaviour
     public event Action OnStatsChanged;
     /// Invoked when health reaches zero.
     public event Action OnDeath;
+    public event Action<StatusPanel.StatusType, int> OnStatusChange;
 
     private int _health;
     private int _block = 0;
 
     private float seOutgoingDamageMultiplier = 1.0f;
+    private int outgoingDamageMultiplierTurns = 0;
     private float seIncomingDamageMultiplier = 1.0f;
+    private int incomingDamageMultiplierTurns = 0;
 
     void Start()
     {
         _health = maxHealth;
+        BattleStatusManager.instance.Bind(this);
         OnStatsChanged?.Invoke();
     }
 
@@ -110,20 +114,53 @@ public class FieldEntity : MonoBehaviour
     /// Increases / decreases the outgoing damage multiplier by a certain amount. 0.1 == 10%.
     public void ModifySEOutgoingDamageMultiplier(float changeAmount)
     {
-        seOutgoingDamageMultiplier += changeAmount;
+        if (outgoingDamageMultiplierTurns == 0)
+            seOutgoingDamageMultiplier += changeAmount;
+        outgoingDamageMultiplierTurns = 0;
+        OnStatusChange?.Invoke(StatusPanel.StatusType.WEAK, 1);
+    }
+
+    public void ModifySEOutgoingDamageMultiplier(float changeAmount, int turns)
+    {
+        if(outgoingDamageMultiplierTurns == 0)
+            seOutgoingDamageMultiplier += changeAmount;
+        outgoingDamageMultiplierTurns = turns;
+        OnStatusChange?.Invoke(StatusPanel.StatusType.WEAK, turns);
     }
 
     /// Increases / decreases the incoming damage multiplier by a certain amount. 0.1 == 10%.
     public void ModifySEIncomingDamageMultiplier(float changeAmount)
     {
         seIncomingDamageMultiplier += changeAmount;
+        incomingDamageMultiplierTurns = 0;
+    }
+
+    public void ModifySEIncomingDamageMultiplier(float changeAmount, int turns)
+    {
+        seIncomingDamageMultiplier += changeAmount;
+        incomingDamageMultiplierTurns = turns;
     }
 
     public virtual void StartTurn()
     {
         _block = 0;
-        seOutgoingDamageMultiplier = 1.0f;
-        seIncomingDamageMultiplier = 1.0f;
+        if(outgoingDamageMultiplierTurns == 0)
+        {
+            seOutgoingDamageMultiplier = 1.0f;
+        }
+        else
+        {
+            outgoingDamageMultiplierTurns--;
+            OnStatusChange?.Invoke(StatusPanel.StatusType.WEAK, outgoingDamageMultiplierTurns);
+        }
+        if(incomingDamageMultiplierTurns == 0)
+        {
+            seIncomingDamageMultiplier = 1.0f;
+        }
+        else
+        {
+            incomingDamageMultiplierTurns--;
+        }
         OnStatsChanged?.Invoke();
     }
 }

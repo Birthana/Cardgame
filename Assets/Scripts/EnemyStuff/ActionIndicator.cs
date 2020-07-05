@@ -8,6 +8,7 @@ public class ActionIndicator : MonoBehaviour
     public SpriteRenderer iconRenderer;
     public Sprite attackSprite;
     public Sprite blockSprite;
+    public Sprite statusSprite;
     public TextMeshPro valueText;
 
     private void Show()
@@ -28,6 +29,13 @@ public class ActionIndicator : MonoBehaviour
         Show();
         iconRenderer.sprite = blockSprite;
         valueText.text = "" + amount;
+    }
+
+    public void ShowStatus()
+    {
+        Show();
+        iconRenderer.sprite = statusSprite;
+        valueText.text = "";
     }
 
     public void Hide() {

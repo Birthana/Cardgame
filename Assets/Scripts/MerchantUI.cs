@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class MerchantUI : MonoBehaviour
 {
@@ -25,6 +26,7 @@ public class MerchantUI : MonoBehaviour
         {
             CardAvatar newCard = Instantiate(cardAvatarPrefab, this.transform);
             newCard.displaying = GetCardFromName(card.cardName);
+            newCard.gameObject.GetComponent<TextMeshPro>().text = "" + card.GetActualCost();
             cardsInShop.Add(newCard);
         }
 

@@ -179,9 +179,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CARD_SPACING: 400
-  cardAvatarPrefab: {fileID: 2519713381551346388, guid: f491d2fdcdb8fa54a8dfc602ca849d2d,
+  cardAvatarPrefab: {fileID: 8710911925061863829, guid: ceca546740bff8a4f918c90389ac5321,
     type: 3}
-  cardsInShop: []
 --- !u!114 &177738421
 MonoBehaviour:
   m_ObjectHideFlags: 0
