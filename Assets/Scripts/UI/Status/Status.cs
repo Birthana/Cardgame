@@ -8,13 +8,12 @@ public class Status : MonoBehaviour
     public SpriteRenderer statusImage;
     public TextMeshPro turnCount;
 
-    public void SetStatusImage(Sprite sprite)
+    public Sprite GetSprite()
     {
-        statusImage.sprite = sprite;
+        return statusImage.sprite;
     }
 
-    public void SetTurnCount(int turns)
-    {
-        turnCount.text = "" + turns;
-    }
+    public void SetStatusImage(Sprite sprite) => statusImage.sprite = sprite;
+
+    public void SetTurnCount(int turns) => turnCount.text = "" + turns;
 }

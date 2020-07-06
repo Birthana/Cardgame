@@ -144,23 +144,20 @@ public class FieldEntity : MonoBehaviour
     public virtual void StartTurn()
     {
         _block = 0;
-        if(outgoingDamageMultiplierTurns == 0)
+        outgoingDamageMultiplierTurns--;
+        if (outgoingDamageMultiplierTurns <= 0)
         {
             seOutgoingDamageMultiplier = 1.0f;
+            outgoingDamageMultiplierTurns = 0;
         }
-        else
-        {
-            outgoingDamageMultiplierTurns--;
-            OnStatusChange?.Invoke(StatusPanel.StatusType.WEAK, outgoingDamageMultiplierTurns);
-        }
-        if(incomingDamageMultiplierTurns == 0)
+        OnStatusChange?.Invoke(StatusPanel.StatusType.WEAK, outgoingDamageMultiplierTurns);
+        incomingDamageMultiplierTurns--;
+        if (incomingDamageMultiplierTurns <= 0)
         {
             seIncomingDamageMultiplier = 1.0f;
+            incomingDamageMultiplierTurns = 0;
         }
-        else
-        {
-            incomingDamageMultiplierTurns--;
-        }
+        //OnStatusChange?.Invoke(StatusPanel.StatusType.VUL, incomingDamageMultiplierTurns);
         OnStatsChanged?.Invoke();
     }
 }
