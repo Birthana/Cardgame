@@ -32,7 +32,7 @@ public class MapEvent
         }
         else if (type == Type.Boss)
         {
-            sceneToLoad = "Boss";
+            sceneToLoad = "GuardEnemyTest";
         }
     }
 

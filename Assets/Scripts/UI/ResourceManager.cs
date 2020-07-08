@@ -6,17 +6,18 @@ using UnityEngine;
 public class ResourceManager
 {
     public static ResourceManager _instance = null;
-    public int MAX_HEALTH, MAX_GOLD;
+    public int MAX_HEALTH;
     private int currentHealth, currentGold;
     public static event Action<int, int> OnHealthChange;
-    public static event Action<int, int> OnGoldChange;
+    public static event Action<int> OnGoldChange;
+    public static event Action<int> OnDeckChange;
 
     public ResourceManager(int maxHealth, int maxGold)
     {
         MAX_HEALTH = currentHealth = maxHealth;
-        MAX_GOLD = currentGold = maxGold;
+        currentGold = maxGold;
         OnHealthChange?.Invoke(currentHealth, MAX_HEALTH);
-        OnGoldChange?.Invoke(currentGold, MAX_GOLD);
+        OnGoldChange?.Invoke(currentGold);
     }
 
     public static ResourceManager instance
@@ -53,7 +54,7 @@ public class ResourceManager
     public void AddGold(int gold)
     {
         currentGold += gold;
-        OnGoldChange?.Invoke(currentGold, MAX_GOLD);
+        OnGoldChange?.Invoke(currentGold);
     }
 
     public void SubtractGold(int gold)
@@ -61,6 +62,11 @@ public class ResourceManager
         currentGold -= gold;
         if (currentGold < 0)
             currentGold = 0;
-        OnGoldChange?.Invoke(currentGold, MAX_GOLD);
+        OnGoldChange?.Invoke(currentGold);
+    }
+
+    public void SetDeckCount(int deckCount)
+    {
+        OnDeckChange?.Invoke(deckCount);
     }
 }

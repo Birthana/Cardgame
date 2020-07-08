@@ -47,6 +47,7 @@ public class GuardEnemy : Enemy
         {
             currentState = (Random.Range(0, 2) == 0) ? BattleState.ATTACK : BattleState.DEFEND;
             context.targets[0].ModifySEOutgoingDamageMultiplier(-0.50f, 3);
+            context.targets[0].ModifySEIncomingDamageMultiplier(0.50f, 3);
             BattleManager.instance.friendlyPortal?.ReduceAmount(5);
         }
         yield return new WaitForSeconds(0.5f);

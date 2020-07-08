@@ -131,14 +131,18 @@ public class FieldEntity : MonoBehaviour
     /// Increases / decreases the incoming damage multiplier by a certain amount. 0.1 == 10%.
     public void ModifySEIncomingDamageMultiplier(float changeAmount)
     {
-        seIncomingDamageMultiplier += changeAmount;
+        if(incomingDamageMultiplierTurns == 0)
+            seIncomingDamageMultiplier += changeAmount;
         incomingDamageMultiplierTurns = 0;
+        OnStatusChange?.Invoke(StatusPanel.StatusType.VUL, 1);
     }
 
     public void ModifySEIncomingDamageMultiplier(float changeAmount, int turns)
     {
-        seIncomingDamageMultiplier += changeAmount;
+        if (incomingDamageMultiplierTurns == 0)
+            seIncomingDamageMultiplier += changeAmount;
         incomingDamageMultiplierTurns = turns;
+        OnStatusChange?.Invoke(StatusPanel.StatusType.VUL, turns);
     }
 
     public virtual void StartTurn()
@@ -157,7 +161,7 @@ public class FieldEntity : MonoBehaviour
             seIncomingDamageMultiplier = 1.0f;
             incomingDamageMultiplierTurns = 0;
         }
-        //OnStatusChange?.Invoke(StatusPanel.StatusType.VUL, incomingDamageMultiplierTurns);
+        OnStatusChange?.Invoke(StatusPanel.StatusType.VUL, incomingDamageMultiplierTurns);
         OnStatsChanged?.Invoke();
     }
 }

@@ -6,10 +6,10 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
+    path: Assets/Scenes/Used/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
-    path: Assets/Scenes/MapExample.unity
+    path: Assets/Scenes/Used/MapExample.unity
     guid: da18975d8f74766499b918ce6632782c
   - enabled: 1
     path: Assets/Scenes/MapTempTest.unity
@@ -24,7 +24,7 @@ EditorBuildSettings:
     path: Assets/Scenes/EnemyEncounter.unity
     guid: 98675727758069d4cac2bfd3566c2e64
   - enabled: 1
-    path: Assets/Scenes/Town2.unity
+    path: Assets/Scenes/Used/Town2.unity
     guid: 864fdfbecb9cd784e9edffeeb2421eb7
   - enabled: 0
     path: 
@@ -33,9 +33,12 @@ EditorBuildSettings:
     path: Assets/Scenes/Boss.unity
     guid: 1730790508adb954b98bd66a47dea60f
   - enabled: 1
-    path: Assets/Scenes/CharacterSelectScreen.unity
+    path: Assets/Scenes/Used/CharacterSelectScreen.unity
     guid: 37b14f801fc25b348a8d89c20ba3067f
   - enabled: 1
-    path: Assets/Scenes/PlayerUI.unity
+    path: Assets/Scenes/Used/PlayerUI.unity
     guid: b037d6d33cd725e4d979a37cab9c3bac
+  - enabled: 1
+    path: Assets/Scenes/Used/GuardEnemyTest.unity
+    guid: 8542a8a5fd9cfcb40922c27244411295
   m_configObjects: {}

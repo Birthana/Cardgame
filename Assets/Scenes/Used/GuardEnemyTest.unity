@@ -1179,34 +1179,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1528814567 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3381135200075131666, guid: e4f054834cc37c920a806a4daff95228,
-    type: 3}
-  m_PrefabInstance: {fileID: 4041169193942367182}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1528814568
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1528814567}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 100882aa44d5234eb8af95389fed24dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  everythingCopies: 0
-  deckContents:
-  - title: Attack
-    quantity: 5
-  - title: Defend
-    quantity: 5
-  - title: Call Power
-    quantity: 1
-  - title: Bolt
-    quantity: 1
 --- !u!1 &1759436714
 GameObject:
   m_ObjectHideFlags: 0

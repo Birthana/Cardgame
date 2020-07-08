@@ -17,8 +17,8 @@ public class UI_Gold : MonoBehaviour
         ResourceManager.OnGoldChange -= ChangeUI;
     }
 
-    public void ChangeUI(int currentGold, int maxGold)
+    public void ChangeUI(int currentGold)
     {
-        goldText.text = currentGold + " / " + maxGold;
+        goldText.text = "" + currentGold;
     }
 }

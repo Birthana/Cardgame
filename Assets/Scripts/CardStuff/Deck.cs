@@ -29,6 +29,7 @@ public class Deck
     public void Add(Card card)
     {
         deck.Add(card);
+        ResourceManager.instance.SetDeckCount(deck.Count);
     }
 
     /// Returns all cards contained in the deck. This will not include cards temporarily gained

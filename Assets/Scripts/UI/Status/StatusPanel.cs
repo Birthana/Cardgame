@@ -69,6 +69,16 @@ public class StatusPanel : MonoBehaviour
 
     public void DisplayStatusUI()
     {
-
+        for (int i = 0; i < statuses.Count; i++)
+        {
+            float transformAmount = ((float)i) - ((float)statuses.Count - 1) / 2;
+            float angle = transformAmount * 3.0f;
+            Vector3 position = new Vector3(
+                Mathf.Sin(angle * Mathf.Deg2Rad),
+                0,
+                0
+                ) * 100f;
+            statuses[i].transform.localPosition = position;
+        }
     }
 }
