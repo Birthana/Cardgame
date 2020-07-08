@@ -13,6 +13,7 @@ public class PlayerUILoader : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(this);
+            SceneManager.LoadScene("MapExample");
         }
         else
         {

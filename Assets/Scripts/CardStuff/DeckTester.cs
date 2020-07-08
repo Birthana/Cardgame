@@ -54,6 +54,5 @@ public class DeckTester : MonoBehaviour
                 }
             }
         }
-        BattleManager.instance.NewBattle();
     }
 }

@@ -235,6 +235,8 @@ public class BattleManager
 
         _energy = Player.instance.maxEnergy;
         OnEnergyChange?.Invoke();
+        RemovePortal(_friendlyPortal);
+        RemovePortal(_enemyPortal);
         DrawCards(5);
     }
 }

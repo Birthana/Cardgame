@@ -2591,19 +2591,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4041169193942367183}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 100882aa44d5234eb8af95389fed24dc, type: 3}
+  m_Script: {fileID: 11500000, guid: 4be3e8015b5fc7648a09b5337c544c8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  everythingCopies: 0
-  deckContents:
-  - title: Attack
-    quantity: 5
-  - title: Defend
-    quantity: 5
-  - title: Call Power
-    quantity: 1
-  - title: Bolt
-    quantity: 1
 --- !u!1001 &7095978990072843495
 PrefabInstance:
   m_ObjectHideFlags: 0
