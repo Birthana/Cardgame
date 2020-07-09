@@ -10,6 +10,7 @@ public class UI_Gold : MonoBehaviour
     private void OnEnable()
     {
         ResourceManager.OnGoldChange += ChangeUI;
+        ResourceManager.RefreshUI();
     }
 
     private void OnDisable()

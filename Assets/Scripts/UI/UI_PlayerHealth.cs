@@ -10,6 +10,7 @@ public class UI_PlayerHealth : MonoBehaviour
     private void OnEnable()
     {
         ResourceManager.OnHealthChange += ChangeUI;
+        ResourceManager.RefreshUI();
     }
 
     private void OnDisable()

@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class UITest : MonoBehaviour
 {
-    private void Start()
+    private void Update()
     {
-        ResourceManager.instance.SubtractHealth(10);
-        ResourceManager.instance.AddGold(15);
+        if (Input.GetMouseButtonDown(0))
+        {
+            ResourceManager.instance.SubtractHealth(10);
+            ResourceManager.instance.AddGold(15);
+        }
     }
 }

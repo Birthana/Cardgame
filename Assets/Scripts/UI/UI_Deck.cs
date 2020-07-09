@@ -10,6 +10,7 @@ public class UI_Deck : MonoBehaviour
     private void OnEnable()
     {
         ResourceManager.OnDeckChange += ChangeUI;
+        ResourceManager.RefreshUI();
     }
 
     private void OnDisable()

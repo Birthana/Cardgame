@@ -6,8 +6,8 @@ using UnityEngine;
 public class ResourceManager
 {
     public static ResourceManager _instance = null;
-    public int MAX_HEALTH;
-    private int currentHealth, currentGold;
+    public static int MAX_HEALTH;
+    private static int currentHealth, currentGold;
     public static event Action<int, int> OnHealthChange;
     public static event Action<int> OnGoldChange;
     public static event Action<int> OnDeckChange;
@@ -25,9 +25,16 @@ public class ResourceManager
         get
         {
             if (_instance == null)
-                _instance = new ResourceManager(50, 100);
+                _instance = new ResourceManager(50, 99);
             return _instance;
         }
+    }
+
+    public static void RefreshUI()
+    {
+        OnHealthChange?.Invoke(currentHealth, MAX_HEALTH);
+        OnGoldChange?.Invoke(currentGold);
+        OnDeckChange?.Invoke(Deck.instance.GetCards().Count);
     }
 
     public void AddHealth(int health)
@@ -55,6 +62,7 @@ public class ResourceManager
     {
         currentGold += gold;
         OnGoldChange?.Invoke(currentGold);
+        Debug.Log("Added: " + gold);
     }
 
     public void SubtractGold(int gold)
