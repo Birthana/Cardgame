@@ -37,17 +37,11 @@ public class ResourceManager
         OnDeckChange?.Invoke(Deck.instance.GetCards().Count);
     }
 
-    public void AddHealth(int health)
+    public void SetHealth(int health)
     {
-        currentHealth += health;
+        currentHealth = health;
         if (currentHealth > MAX_HEALTH)
             currentHealth = MAX_HEALTH;
-        OnHealthChange?.Invoke(currentHealth, MAX_HEALTH);
-    }
-
-    public void SubtractHealth(int health)
-    {
-        currentHealth -= health;
         if (currentHealth < 0)
             currentHealth = 0;
         OnHealthChange?.Invoke(currentHealth, MAX_HEALTH);
@@ -62,7 +56,6 @@ public class ResourceManager
     {
         currentGold += gold;
         OnGoldChange?.Invoke(currentGold);
-        Debug.Log("Added: " + gold);
     }
 
     public void SubtractGold(int gold)

@@ -30,4 +30,10 @@ public class Player : FieldEntity
     {
         _instance = null;
     }
+
+    public override void TakeDamage(int damage)
+    {
+        base.TakeDamage(damage);
+        ResourceManager.instance.SetHealth(health);
+    }
 }

@@ -8,7 +8,7 @@ public class UITest : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            ResourceManager.instance.SubtractHealth(10);
+            //ResourceManager.instance.SubtractHealth(10);
             ResourceManager.instance.AddGold(15);
         }
     }

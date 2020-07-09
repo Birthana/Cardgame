@@ -43,7 +43,7 @@ public class FieldEntity : MonoBehaviour
     }
 
     /// Applies the given amount of damage. 
-    public void TakeDamage(int damage)
+    public virtual void TakeDamage(int damage)
     {
         damage = ComputeDamageReceived(damage);
         if (block >= damage)
